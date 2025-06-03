@@ -2,124 +2,204 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Custom animations and styles */
-.App {
-  text-align: center;
+/* Living Oasis Canvas Styles */
+.oasis-canvas {
+  background: linear-gradient(to bottom, 
+    #87CEEB 0%,     /* Sky blue */
+    #98FB98 30%,    /* Pale green */
+    #90EE90 70%,    /* Light green */
+    #228B22 100%    /* Forest green */
+  );
+  overflow: hidden;
+}
+
+/* Element Animations */
+.grass-element {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  animation: sway 4s ease-in-out infinite;
+}
+
+.flower-element {
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+  animation: bloom 3s ease-out;
+}
+
+.tree-element {
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  animation: grow 4s ease-out;
+}
+
+.butterfly-element {
+  animation: flutter 3s ease-in-out infinite;
+}
+
+.crystal-element {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.mushroom-element {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  animation: sprout 2s ease-out;
+}
+
+/* Keyframe Animations */
+@keyframes sway {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-2deg); }
+  50% { transform: translate(-50%, -50%) rotate(2deg); }
+}
+
+@keyframes bloom {
+  0% { 
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(0.8) rotate(180deg);
+    opacity: 0.7;
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes grow {
+  0% { 
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0.5;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.8;
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes flutter {
+  0%, 100% { 
+    transform: translate(-50%, -50%) translateY(0px) rotate(0deg);
+  }
+  25% { 
+    transform: translate(-50%, -50%) translateY(-8px) rotate(-10deg);
+  }
+  50% { 
+    transform: translate(-50%, -50%) translateY(-4px) rotate(5deg);
+  }
+  75% { 
+    transform: translate(-50%, -50%) translateY(-12px) rotate(-5deg);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+    filter: brightness(1);
+  }
+  50% { 
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+    filter: brightness(1.5) drop-shadow(0 0 8px currentColor);
+  }
+}
+
+@keyframes sprout {
+  0% { 
+    transform: translate(-50%, -50%) scale(0) translateY(10px);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.1) translateY(-2px);
+    opacity: 0.8;
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(1) translateY(0px);
+    opacity: 1;
+  }
+}
+
+/* Breathing Particles */
+.breathing-particles .particle {
+  animation: breathe-float 8s ease-in-out infinite;
+}
+
+@keyframes breathe-float {
+  0% { 
+    transform: translateY(100vh) translateX(0px) scale(0);
+    opacity: 0;
+  }
+  10% { 
+    transform: translateY(80vh) translateX(10px) scale(1);
+    opacity: 0.8;
+  }
+  90% { 
+    transform: translateY(10vh) translateX(50px) scale(1);
+    opacity: 0.6;
+  }
+  100% { 
+    transform: translateY(-10vh) translateX(60px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Enhanced Flutter Animation */
+@keyframes flutter {
+  0% { 
+    transform: translate(-50%, -50%) translateX(0px) translateY(0px) rotate(0deg);
+  }
+  25% { 
+    transform: translate(-50%, -50%) translateX(15px) translateY(-10px) rotate(10deg);
+  }
+  50% { 
+    transform: translate(-50%, -50%) translateX(-10px) translateY(-5px) rotate(-5deg);
+  }
+  75% { 
+    transform: translate(-50%, -50%) translateX(8px) translateY(-15px) rotate(8deg);
+  }
+  100% { 
+    transform: translate(-50%, -50%) translateX(0px) translateY(0px) rotate(0deg);
+  }
+}
+
+/* Breathing Guide Enhanced */
+.breathing-guide {
+  position: relative;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+}
+
+.breathing-guide::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% { 
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  50% { 
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
 }
 
 /* Smooth transitions for all elements */
 * {
   transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-/* Custom breathing animation */
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
-
-.breathing-guide {
-  animation: breathe 4s ease-in-out infinite;
-}
-
-/* Landscape transformation effects */
-.landscape-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent, rgba(46, 125, 50, 0.1));
-  mix-blend-mode: overlay;
-  transition: opacity 2s ease;
-}
-
-/* Glass morphism effects */
-.glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(45deg, #64b5f6, #42a5f5, #2196f3);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Hover effects */
-.hover-glow:hover {
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-/* Breathing guide animations */
-.breathing-inhale {
-  animation: expand 4s ease-in-out infinite;
-}
-
-.breathing-exhale {
-  animation: contract 6s ease-in-out infinite;
-}
-
-@keyframes expand {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.5); opacity: 1; }
-}
-
-@keyframes contract {
-  0%, 100% { transform: scale(1.5); opacity: 1; }
-  50% { transform: scale(0.8); opacity: 0.6; }
-}
-
-/* Subtle particles effect */
-.particles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 50%;
-  animation: float 10s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { 
-    transform: translateY(100vh) translateX(0px);
-    opacity: 0;
-  }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { 
-    transform: translateY(-10vh) translateX(100px);
-    opacity: 0;
-  }
 }
 
 /* Progress bar animations */
@@ -150,6 +230,13 @@
   100% { transform: translateX(100%); }
 }
 
+/* Glass morphism effects */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 /* Button hover effects */
 .btn-primary {
   position: relative;
@@ -176,6 +263,24 @@
   left: 100%;
 }
 
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
 /* Responsive design helpers */
 @media (max-width: 768px) {
   .breathing-guide {
@@ -186,6 +291,21 @@
   .text-responsive {
     font-size: clamp(1rem, 4vw, 2rem);
   }
+  
+  .oasis-canvas .grass-element svg {
+    width: 8px;
+    height: 14px;
+  }
+  
+  .oasis-canvas .flower-element svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .oasis-canvas .tree-element svg {
+    width: 30px;
+    height: 45px;
+  }
 }
 
 /* Focus states for accessibility */
@@ -193,6 +313,60 @@ button:focus,
 .focusable:focus {
   outline: 2px solid rgba(59, 130, 246, 0.5);
   outline-offset: 2px;
+}
+
+/* Enhanced element interactions */
+.grass-element:hover {
+  animation-duration: 2s;
+}
+
+.flower-element:hover {
+  transform: translate(-50%, -50%) scale(1.1) !important;
+  transition: transform 0.3s ease;
+}
+
+.butterfly-element:hover {
+  animation-duration: 1.5s;
+}
+
+/* Seasonal weather effects (future enhancement) */
+.weather-rain::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(173, 216, 230, 0.3) 100%);
+  pointer-events: none;
+  animation: rain-effect 3s ease-in-out infinite;
+}
+
+@keyframes rain-effect {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Dynamic lighting effects */
+.oasis-canvas::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 70% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  animation: sunlight 10s ease-in-out infinite;
+}
+
+@keyframes sunlight {
+  0%, 100% { 
+    background: radial-gradient(ellipse at 70% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  }
+  50% { 
+    background: radial-gradient(ellipse at 30% 25%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+  }
 }
 
 /* Loading states */
