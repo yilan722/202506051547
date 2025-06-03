@@ -395,12 +395,12 @@ function App() {
     setCurrentScreen('completion');
   };
 
-  const handleElementGrown = (newElement) => {
+  const handleElementGrown = useCallback((newElement) => {
     setOasisState(prev => ({
       ...prev,
       elements: [...prev.elements, newElement]
     }));
-  };
+  }, []);
 
   const resetApp = () => {
     if (intervalRef.current) {
