@@ -54,14 +54,14 @@ const BREATHING_PATTERNS = {
   }
 };
 
-// Oasis element types for procedural generation
+// Oasis element types for procedural generation - colors adapted for barren earth restoration
 const ELEMENT_TYPES = {
-  grass: { weight: 40, growTime: 1.5, colors: ['#4ade80', '#22c55e', '#16a34a'] },
-  flower: { weight: 25, growTime: 2.5, colors: ['#f472b6', '#ec4899', '#db2777', '#fbbf24', '#f59e0b'] },
-  tree: { weight: 15, growTime: 4, colors: ['#22c55e', '#16a34a', '#15803d'] },
-  butterfly: { weight: 10, growTime: 1, colors: ['#f472b6', '#a855f7', '#3b82f6'] },
-  crystal: { weight: 5, growTime: 3, colors: ['#06b6d4', '#0891b2', '#0e7490'] },
-  mushroom: { weight: 5, growTime: 2, colors: ['#f87171', '#ef4444', '#dc2626'] }
+  grass: { weight: 40, growTime: 1.5, colors: ['#22c55e', '#16a34a', '#15803d', '#84cc16'] },
+  flower: { weight: 25, growTime: 2.5, colors: ['#f59e0b', '#eab308', '#d97706', '#dc2626', '#f472b6'] },
+  tree: { weight: 15, growTime: 4, colors: ['#16a34a', '#15803d', '#166534', '#064e3b'] },
+  butterfly: { weight: 10, growTime: 1, colors: ['#f59e0b', '#eab308', '#f97316', '#3b82f6'] },
+  crystal: { weight: 5, growTime: 3, colors: ['#06b6d4', '#0891b2', '#0e7490', '#0284c7'] },
+  mushroom: { weight: 5, growTime: 2, colors: ['#dc2626', '#b91c1c', '#991b1b', '#f97316'] }
 };
 
 // Oasis Canvas Component
