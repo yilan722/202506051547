@@ -232,8 +232,17 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown }) => {
 
   return (
     <div ref={canvasRef} className="oasis-canvas absolute inset-0 overflow-hidden">
-      {/* Base landscape */}
-      <div className="absolute inset-0 bg-gradient-to-b from-sky-200 via-green-100 to-green-200 opacity-60"></div>
+      {/* Use the provided barren landscape image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(https://images.pexels.com/photos/60013/desert-drought-dehydrated-clay-soil-60013.jpeg)',
+          filter: 'brightness(0.85) contrast(1.1)'
+        }}
+      ></div>
+      
+      {/* Subtle overlay to enhance element visibility */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
       
       {/* Permanent oasis elements */}
       {oasisState.elements.map(element => renderElement(element))}
@@ -241,16 +250,17 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown }) => {
       {/* Currently animating elements */}
       {animatingElements.map(element => renderElement(element, true))}
       
-      {/* Breathing particles */}
+      {/* Breathing particles - positioned to emanate from the central crater */}
       <div className="breathing-particles absolute inset-0 pointer-events-none">
-        {Array.from({ length: 12 }, (_, i) => (
+        {Array.from({ length: 8 }, (_, i) => (
           <div
             key={i}
-            className="particle absolute w-2 h-2 bg-white rounded-full opacity-60 animate-float"
+            className="particle absolute w-1 h-1 bg-yellow-300 rounded-full opacity-70 animate-float"
             style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${8 + Math.random() * 4}s`
+              left: `${48 + Math.cos(i * 0.785) * 10}%`, // Emanate from center crater
+              top: `${65 + Math.sin(i * 0.785) * 6}%`,
+              animationDelay: `${Math.random() * 8}s`,
+              animationDuration: `${6 + Math.random() * 4}s`
             }}
           />
         ))}
