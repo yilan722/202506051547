@@ -68,20 +68,28 @@ const ELEMENT_TYPES = {
 const OasisCanvas = ({ oasisState, breathProgress, onElementGrown }) => {
   const canvasRef = useRef(null);
   const [animatingElements, setAnimatingElements] = useState([]);
+  const lastProgressRef = useRef(0);
 
   // Generate new element when breathing progresses
   useEffect(() => {
-    if (breathProgress > 0 && breathProgress % 10 === 0) { // Every 10% progress
+    const progressMilestone = Math.floor(breathProgress / 12.5) * 12.5; // Every 12.5% progress
+    const lastMilestone = Math.floor(lastProgressRef.current / 12.5) * 12.5;
+    
+    if (breathProgress > 0 && progressMilestone > lastMilestone && progressMilestone <= 100) {
+      console.log('Generating element at progress:', breathProgress);
       const newElement = generateRandomElement();
       setAnimatingElements(prev => [...prev, newElement]);
       
       // After animation completes, add to permanent oasis
+      const animationTime = newElement.type === 'tree' ? 4000 : newElement.type === 'flower' ? 2500 : 1500;
       setTimeout(() => {
         onElementGrown(newElement);
         setAnimatingElements(prev => prev.filter(el => el.id !== newElement.id));
-      }, newElement.type === 'tree' ? 4000 : newElement.type === 'flower' ? 2500 : 1500);
+      }, animationTime);
     }
-  }, [breathProgress, onElementGrown]);
+    
+    lastProgressRef.current = breathProgress;
+  }, [breathProgress]); // Removed onElementGrown from dependencies
 
   const generateRandomElement = () => {
     const types = Object.keys(ELEMENT_TYPES);
