@@ -323,14 +323,19 @@ function App() {
     let currentCycle = 0;
     let currentPhase = 'inhale';
     let timeRemaining = pattern.inhale;
+    let totalElapsed = 0;
+    const totalSessionTime = pattern.cycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.holdAfter);
 
     const updateSession = () => {
+      totalElapsed += 0.1;
+      const progressPercentage = Math.min((totalElapsed / totalSessionTime) * 100, 100);
+      
       setBreathingSession(prev => ({
         ...prev,
         currentCycle,
         currentPhase,
         timeRemaining: Math.ceil(timeRemaining),
-        progress: (currentCycle / pattern.cycles) * 100
+        progress: progressPercentage
       }));
 
       timeRemaining -= 0.1;
