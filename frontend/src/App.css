@@ -2,43 +2,39 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Living Oasis Canvas Styles */
+/* Living Oasis Canvas Styles - adapted for barren earth background */
 .oasis-canvas {
-  background: linear-gradient(to bottom, 
-    #87CEEB 0%,     /* Sky blue */
-    #98FB98 30%,    /* Pale green */
-    #90EE90 70%,    /* Light green */
-    #228B22 100%    /* Forest green */
-  );
   overflow: hidden;
 }
 
-/* Element Animations */
+/* Enhanced element shadows for better visibility on the barren earth */
 .grass-element {
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
   animation: sway 4s ease-in-out infinite;
 }
 
 .flower-element {
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5));
   animation: bloom 3s ease-out;
 }
 
 .tree-element {
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
   animation: grow 4s ease-out;
 }
 
 .butterfly-element {
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
   animation: flutter 3s ease-in-out infinite;
 }
 
 .crystal-element {
+  filter: drop-shadow(0 4px 10px rgba(6,182,212,0.4));
   animation: sparkle 2s ease-in-out infinite;
 }
 
 .mushroom-element {
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
   animation: sprout 2s ease-out;
 }
 
