@@ -107,17 +107,35 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown }) => {
       }
     }
 
+    // Position elements to grow from the cracked earth areas
+    // Focus on the central circular area and crack lines
+    const isCentralGrowth = Math.random() < 0.7; // 70% chance to grow in center
+    let x, y;
+    
+    if (isCentralGrowth) {
+      // Central circular area (45-55% x, 55-75% y for the crater-like area)
+      const angle = Math.random() * 2 * Math.PI;
+      const radius = Math.random() * 15 + 5; // 5-20% radius from center
+      x = 50 + Math.cos(angle) * radius;
+      y = 65 + Math.sin(angle) * radius * 0.6; // Slightly elliptical
+    } else {
+      // Along crack lines - more spread out
+      x = Math.random() * 70 + 15; // 15-85% width
+      y = Math.random() * 50 + 40; // 40-90% height (lower part of image)
+    }
+
     const typeConfig = ELEMENT_TYPES[selectedType];
     return {
       id: Date.now() + Math.random(),
       type: selectedType,
-      x: Math.random() * 80 + 10, // 10-90% of canvas width
-      y: Math.random() * 60 + 30, // 30-90% of canvas height
-      size: Math.random() * 0.5 + 0.5, // 0.5-1.0 scale
+      x: Math.max(5, Math.min(95, x)), // Ensure bounds
+      y: Math.max(35, Math.min(95, y)), // Ensure bounds
+      size: Math.random() * 0.4 + 0.6, // 0.6-1.0 scale
       color: typeConfig.colors[Math.floor(Math.random() * typeConfig.colors.length)],
       rotation: Math.random() * 360,
       growTime: typeConfig.growTime,
-      birthTime: Date.now()
+      birthTime: Date.now(),
+      isCentralGrowth
     };
   };
 
