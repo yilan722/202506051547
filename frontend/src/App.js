@@ -723,6 +723,26 @@ function App() {
         </div>
 
         <div className="text-center z-20">
+          {/* Interactive Breath Button */}
+          <div className="mb-8">
+            <button
+              onMouseDown={handleBreathButtonPress}
+              onMouseUp={handleBreathButtonRelease}
+              onTouchStart={handleBreathButtonPress}
+              onTouchEnd={handleBreathButtonRelease}
+              className={`w-24 h-24 mx-auto rounded-full transition-all duration-300 ${
+                isBreathButtonPressed 
+                  ? `bg-gradient-to-br ${pattern.color} scale-110` 
+                  : `bg-gradient-to-br ${pattern.color} opacity-70`
+              } border-4 border-white border-opacity-50 flex items-center justify-center text-white font-bold shadow-2xl`}
+            >
+              {breathingSession.currentPhase === 'inhale' ? '按住' : '放开'}
+            </button>
+            <p className="text-white text-sm mt-2 opacity-80">
+              {breathingSession.currentPhase === 'inhale' ? 'Press and hold while inhaling' : 'Release while exhaling'}
+            </p>
+          </div>
+
           {/* Breathing Guide Circle */}
           <div className="mb-12">
             <div className={`w-32 h-32 mx-auto rounded-full bg-gradient-to-br ${pattern.color} opacity-90 transform transition-transform duration-1000 ease-in-out ${getBreathingGuideSize()}`}>
