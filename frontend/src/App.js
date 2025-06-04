@@ -391,66 +391,154 @@ function App() {
     }
   };
 
-  // Create ambient background sound
+  // Create calm and peaceful ambient sound
   const createAmbientSound = () => {
     if (!audioContext) return null;
     
     try {
-      // Create multiple oscillators for rich ambient texture
       const oscillators = [];
       const gainNodes = [];
+      const filters = [];
       
-      // Deep bass tone (foundation)
-      const bass = audioContext.createOscillator();
-      const bassGain = audioContext.createGain();
-      bass.frequency.setValueAtTime(60, audioContext.currentTime);
-      bass.type = 'sine';
-      bassGain.gain.setValueAtTime(0.1, audioContext.currentTime);
-      bass.connect(bassGain);
-      bassGain.connect(audioContext.destination);
+      // 1. Deep meditation drone (Om frequency)
+      const omTone = audioContext.createOscillator();
+      const omGain = audioContext.createGain();
+      const omFilter = audioContext.createBiquadFilter();
       
-      // Mid harmonic
-      const mid = audioContext.createOscillator();
-      const midGain = audioContext.createGain();
-      mid.frequency.setValueAtTime(180, audioContext.currentTime);
-      mid.type = 'sine';
-      midGain.gain.setValueAtTime(0.05, audioContext.currentTime);
-      mid.connect(midGain);
-      midGain.connect(audioContext.destination);
+      omTone.frequency.setValueAtTime(136.1, audioContext.currentTime); // Om frequency in Hz
+      omTone.type = 'sine';
+      omFilter.type = 'lowpass';
+      omFilter.frequency.setValueAtTime(200, audioContext.currentTime);
+      omGain.gain.setValueAtTime(0.08, audioContext.currentTime);
       
-      // High harmonic with slow modulation
-      const high = audioContext.createOscillator();
-      const highGain = audioContext.createGain();
-      const modulator = audioContext.createOscillator();
-      const modulatorGain = audioContext.createGain();
+      omTone.connect(omFilter);
+      omFilter.connect(omGain);
+      omGain.connect(audioContext.destination);
       
-      modulator.frequency.setValueAtTime(0.2, audioContext.currentTime); // Very slow modulation
-      modulatorGain.gain.setValueAtTime(50, audioContext.currentTime);
-      modulator.connect(modulatorGain);
-      modulatorGain.connect(high.frequency);
+      // 2. Gentle wind-like texture
+      const windOsc = audioContext.createOscillator();
+      const windGain = audioContext.createGain();
+      const windFilter = audioContext.createBiquadFilter();
+      const windModulator = audioContext.createOscillator();
+      const windModGain = audioContext.createGain();
       
-      high.frequency.setValueAtTime(220, audioContext.currentTime);
-      high.type = 'sine';
-      highGain.gain.setValueAtTime(0.03, audioContext.currentTime);
-      high.connect(highGain);
-      highGain.connect(audioContext.destination);
+      windOsc.frequency.setValueAtTime(80, audioContext.currentTime);
+      windOsc.type = 'triangle';
+      windFilter.type = 'bandpass';
+      windFilter.frequency.setValueAtTime(150, audioContext.currentTime);
+      windFilter.Q.setValueAtTime(0.5, audioContext.currentTime);
+      
+      // Very slow modulation for wind-like effect
+      windModulator.frequency.setValueAtTime(0.1, audioContext.currentTime);
+      windModGain.gain.setValueAtTime(20, audioContext.currentTime);
+      windModulator.connect(windModGain);
+      windModGain.connect(windOsc.frequency);
+      
+      windGain.gain.setValueAtTime(0.03, audioContext.currentTime);
+      
+      windOsc.connect(windFilter);
+      windFilter.connect(windGain);
+      windGain.connect(audioContext.destination);
+      
+      // 3. Gentle harmonic overtone (perfect fifth)
+      const harmonic = audioContext.createOscillator();
+      const harmonicGain = audioContext.createGain();
+      const harmonicFilter = audioContext.createBiquadFilter();
+      
+      harmonic.frequency.setValueAtTime(204.15, audioContext.currentTime); // Perfect fifth of Om
+      harmonic.type = 'sine';
+      harmonicFilter.type = 'lowpass';
+      harmonicFilter.frequency.setValueAtTime(300, audioContext.currentTime);
+      harmonicGain.gain.setValueAtTime(0.04, audioContext.currentTime);
+      
+      harmonic.connect(harmonicFilter);
+      harmonicFilter.connect(harmonicGain);
+      harmonicGain.connect(audioContext.destination);
+      
+      // 4. Subtle water-like trickling (high frequency gentle noise)
+      const waterOsc = audioContext.createOscillator();
+      const waterGain = audioContext.createGain();
+      const waterFilter = audioContext.createBiquadFilter();
+      const waterMod = audioContext.createOscillator();
+      const waterModGain = audioContext.createGain();
+      
+      waterOsc.frequency.setValueAtTime(800, audioContext.currentTime);
+      waterOsc.type = 'triangle';
+      waterFilter.type = 'highpass';
+      waterFilter.frequency.setValueAtTime(1200, audioContext.currentTime);
+      waterFilter.Q.setValueAtTime(2, audioContext.currentTime);
+      
+      // Very gentle modulation for water effect
+      waterMod.frequency.setValueAtTime(0.3, audioContext.currentTime);
+      waterModGain.gain.setValueAtTime(100, audioContext.currentTime);
+      waterMod.connect(waterModGain);
+      waterModGain.connect(waterOsc.frequency);
+      
+      waterGain.gain.setValueAtTime(0.015, audioContext.currentTime);
+      
+      waterOsc.connect(waterFilter);
+      waterFilter.connect(waterGain);
+      waterGain.connect(audioContext.destination);
+      
+      // 5. Gentle breathing rhythm enhancer
+      const breathOsc = audioContext.createOscillator();
+      const breathGain = audioContext.createGain();
+      const breathLFO = audioContext.createOscillator();
+      const breathLFOGain = audioContext.createGain();
+      
+      breathOsc.frequency.setValueAtTime(272.2, audioContext.currentTime); // Octave of Om
+      breathOsc.type = 'sine';
+      
+      // Very slow LFO to mimic breathing (4 breaths per minute)
+      breathLFO.frequency.setValueAtTime(0.067, audioContext.currentTime);
+      breathLFOGain.gain.setValueAtTime(0.02, audioContext.currentTime);
+      breathLFO.connect(breathLFOGain);
+      breathLFOGain.connect(breathGain.gain);
+      
+      breathGain.gain.setValueAtTime(0.02, audioContext.currentTime);
+      
+      breathOsc.connect(breathGain);
+      breathGain.connect(audioContext.destination);
       
       // Start all oscillators
-      bass.start();
-      mid.start();
-      high.start();
-      modulator.start();
+      omTone.start();
+      windOsc.start();
+      windModulator.start();
+      harmonic.start();
+      waterOsc.start();
+      waterMod.start();
+      breathOsc.start();
+      breathLFO.start();
+      
+      // Add gentle fade-in
+      const masterGain = audioContext.createGain();
+      masterGain.gain.setValueAtTime(0, audioContext.currentTime);
+      masterGain.gain.linearRampToValueAtTime(1, audioContext.currentTime + 3); // 3 second fade-in
       
       return {
         stop: () => {
-          bass.stop();
-          mid.stop();
-          high.stop();
-          modulator.stop();
+          // Gentle fade-out before stopping
+          const fadeOutTime = audioContext.currentTime + 2;
+          omGain.gain.linearRampToValueAtTime(0, fadeOutTime);
+          windGain.gain.linearRampToValueAtTime(0, fadeOutTime);
+          harmonicGain.gain.linearRampToValueAtTime(0, fadeOutTime);
+          waterGain.gain.linearRampToValueAtTime(0, fadeOutTime);
+          breathGain.gain.linearRampToValueAtTime(0, fadeOutTime);
+          
+          setTimeout(() => {
+            omTone.stop();
+            windOsc.stop();
+            windModulator.stop();
+            harmonic.stop();
+            waterOsc.stop();
+            waterMod.stop();
+            breathOsc.stop();
+            breathLFO.stop();
+          }, 2100);
         }
       };
     } catch (error) {
-      console.log('Ambient sound creation failed:', error);
+      console.log('Peaceful ambient sound creation failed:', error);
       return null;
     }
   };
