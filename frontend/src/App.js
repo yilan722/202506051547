@@ -748,6 +748,9 @@ function App() {
     }
     setBreathingSession(prev => ({ ...prev, isActive: false, progress: 100 }));
     
+    // Stop ambient sound
+    stopAmbientSound();
+    
     // Add completion bonus elements to oasis
     setOasisState(prev => ({
       elements: prev.elements,
@@ -768,6 +771,10 @@ function App() {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
+    
+    // Stop ambient sound when leaving breathing session
+    stopAmbientSound();
+    
     setCurrentScreen('welcome');
     setSelectedIntention(null);
     setBreathingSession({
