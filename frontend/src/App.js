@@ -830,62 +830,101 @@ function App() {
         </div>
 
         <div className="text-center z-20">
-          {/* Interactive Breath Button */}
-          <div className="mb-8">
+          {/* Interactive Breath Button with enhanced design */}
+          <div className="mb-12">
             <button
               onMouseDown={handleBreathButtonPress}
               onMouseUp={handleBreathButtonRelease}
               onTouchStart={handleBreathButtonPress}
               onTouchEnd={handleBreathButtonRelease}
-              className={`w-24 h-24 mx-auto rounded-full transition-all duration-300 ${
+              className={`breath-button relative w-32 h-32 mx-auto rounded-full transition-all duration-500 ${
                 isBreathButtonPressed 
-                  ? `bg-gradient-to-br ${pattern.color} scale-110` 
-                  : `bg-gradient-to-br ${pattern.color} opacity-70`
-              } border-4 border-white border-opacity-50 flex items-center justify-center text-white font-bold shadow-2xl`}
+                  ? `bg-gradient-to-br ${pattern.color} scale-110 shadow-2xl` 
+                  : `bg-gradient-to-br ${pattern.color} opacity-80 shadow-xl`
+              } border-4 border-white/30 backdrop-blur-sm flex items-center justify-center text-white font-light shadow-2xl overflow-hidden`}
             >
-              {breathingSession.currentPhase === 'inhale' ? '按住' : '放开'}
+              {/* Button inner glow */}
+              <div className="absolute inset-2 rounded-full bg-gradient-to-br from-white/20 via-transparent to-transparent"></div>
+              
+              <div className="relative z-10 text-center">
+                <div className="text-lg font-light mb-1">
+                  {breathingSession.currentPhase === 'inhale' ? '按住' : '放开'}
+                </div>
+                <div className="text-xs opacity-80">
+                  {breathingSession.currentPhase === 'inhale' ? 'Hold' : 'Release'}
+                </div>
+              </div>
+              
+              {/* Ripple effect */}
+              <div className={`absolute inset-0 rounded-full bg-white/20 transition-all duration-300 ${
+                isBreathButtonPressed ? 'scale-150 opacity-0' : 'scale-100 opacity-0'
+              }`}></div>
             </button>
-            <p className="text-white text-sm mt-2 opacity-80">
-              {breathingSession.currentPhase === 'inhale' ? 'Press and hold while inhaling' : 'Release while exhaling'}
+            
+            <p className="text-white text-sm mt-4 opacity-80 font-light">
+              {breathingSession.currentPhase === 'inhale' 
+                ? 'Press and hold while inhaling deeply' 
+                : 'Release while exhaling slowly'}
             </p>
           </div>
 
-          {/* Breathing Guide Circle */}
-          <div className="mb-12">
-            <div className={`w-32 h-32 mx-auto rounded-full bg-gradient-to-br ${pattern.color} opacity-90 transform transition-transform duration-1000 ease-in-out ${getBreathingGuideSize()}`}>
-              <div className="w-full h-full rounded-full border-4 border-white border-opacity-50 flex items-center justify-center">
-                <div className="text-white text-lg font-semibold">
-                  {Math.ceil(breathingSession.timeRemaining)}
+          {/* Enhanced Breathing Guide Circle */}
+          <div className="mb-16">
+            <div className="relative">
+              {/* Outer ring effect */}
+              <div className={`absolute inset-0 w-40 h-40 mx-auto rounded-full border-2 border-white/20 transition-all duration-1000 ${getBreathingGuideSize()} opacity-50`}></div>
+              
+              {/* Main breathing guide */}
+              <div className={`w-36 h-36 mx-auto rounded-full bg-gradient-to-br ${pattern.color} backdrop-blur-sm transform transition-all duration-1000 ease-in-out ${getBreathingGuideSize()} relative overflow-hidden shadow-2xl`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent"></div>
+                <div className="w-full h-full rounded-full border-4 border-white/40 flex items-center justify-center relative z-10">
+                  <div className="text-white text-2xl font-light drop-shadow-lg">
+                    {Math.ceil(breathingSession.timeRemaining)}
+                  </div>
                 </div>
+                
+                {/* Inner pulse effect */}
+                <div className="absolute inset-4 rounded-full bg-white/10 animate-pulse"></div>
               </div>
             </div>
           </div>
 
-          {/* Instructions */}
-          <div className="mb-8">
-            <h2 className="text-4xl font-light text-white mb-2 drop-shadow-lg">
+          {/* Refined Instructions */}
+          <div className="mb-12">
+            <h2 className="text-5xl font-extralight text-white mb-3 drop-shadow-2xl tracking-wide">
               {getPhaseInstruction()}
             </h2>
-            <p className="text-xl text-white opacity-90 drop-shadow-lg">
+            <p className="text-xl text-white/80 drop-shadow-lg font-light">
               Cycle {breathingSession.currentCycle + 1} of {pattern.cycles}
             </p>
           </div>
 
-          {/* Pattern Info */}
-          <div className="bg-black bg-opacity-40 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto">
-            <div className="text-white mb-2">
-              <span className="text-2xl mr-2">{intention.icon}</span>
-              {pattern.name}
+          {/* Elegant Pattern Info */}
+          <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-8 max-w-md mx-auto border border-white/10 shadow-2xl">
+            <div className="flex items-center justify-center mb-4">
+              <span className="text-3xl mr-3 filter drop-shadow-lg">{intention.icon}</span>
+              <div className="text-white text-xl font-light tracking-wide">{pattern.name}</div>
             </div>
-            <div className="text-white opacity-80">
-              Your breath is growing your personal oasis
+            <div className="text-white/80 font-light text-center leading-relaxed">
+              Your breath is nurturing your personal sanctuary
+            </div>
+            
+            {/* Progress indicator */}
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <div className="flex items-center justify-center space-x-3">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                <span className="text-emerald-200 text-sm font-light">
+                  {Math.round(breathingSession.progress)}% Complete
+                </span>
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+              </div>
             </div>
           </div>
 
-          {/* Exit Button */}
+          {/* Refined Exit Button */}
           <button
             onClick={resetApp}
-            className="absolute top-6 right-6 w-12 h-12 rounded-full bg-black bg-opacity-30 text-white hover:bg-opacity-50 transition-colors duration-300 flex items-center justify-center z-30"
+            className="absolute top-8 right-8 w-14 h-14 rounded-full bg-black/20 backdrop-blur-sm text-white/80 hover:text-white hover:bg-black/40 transition-all duration-300 flex items-center justify-center z-30 border border-white/10 text-xl font-light"
           >
             ✕
           </button>
