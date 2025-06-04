@@ -226,6 +226,31 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown }) => {
           </div>
         );
       
+      case 'palmTree':
+        return (
+          <div {...baseProps} className="palm-tree-element">
+            <svg width="35" height="70" viewBox="0 0 35 70">
+              <rect x="16" y="40" width="3" height="30" fill="#8b4513"/>
+              <path d="M17.5 40 Q5 25 15 15" stroke={color} strokeWidth="3" fill="none"/>
+              <path d="M17.5 40 Q30 25 20 15" stroke={color} strokeWidth="3" fill="none"/>
+              <path d="M17.5 40 Q10 20 25 20" stroke={color} strokeWidth="3" fill="none"/>
+              <path d="M17.5 40 Q25 20 10 20" stroke={color} strokeWidth="3" fill="none"/>
+            </svg>
+          </div>
+        );
+      
+      case 'succulent':
+        return (
+          <div {...baseProps} className="succulent-element">
+            <svg width="20" height="25" viewBox="0 0 20 25">
+              <ellipse cx="10" cy="20" rx="8" ry="5" fill={color} opacity="0.9"/>
+              <ellipse cx="10" cy="15" rx="6" ry="4" fill={color} opacity="0.7"/>
+              <ellipse cx="10" cy="11" rx="4" ry="3" fill={color} opacity="0.8"/>
+              <circle cx="10" cy="8" r="2" fill="#f59e0b"/>
+            </svg>
+          </div>
+        );
+      
       case 'butterfly':
         return (
           <div {...baseProps} className="butterfly-element animate-flutter">
