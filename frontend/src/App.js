@@ -474,10 +474,18 @@ function App() {
     let currentPhase = 'inhale';
     let timeRemaining = pattern.inhale;
     let totalElapsed = 0;
+    let isPaused = false; // New: track if breathing is paused
     const totalSessionTime = pattern.cycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.holdAfter);
 
     const updateSession = () => {
-      totalElapsed += 0.1;
+      // Only progress time if user is doing the correct action
+      const shouldProgress = getShouldProgressTime(currentPhase);
+      
+      if (shouldProgress && !isPaused) {
+        totalElapsed += 0.1;
+        timeRemaining -= 0.1;
+      }
+      
       const progressPercentage = Math.min((totalElapsed / totalSessionTime) * 100, 100);
       
       setBreathingSession(prev => ({
@@ -487,8 +495,6 @@ function App() {
         timeRemaining: Math.ceil(timeRemaining),
         progress: progressPercentage
       }));
-
-      timeRemaining -= 0.1;
 
       if (timeRemaining <= 0) {
         if (currentPhase === 'inhale') {
@@ -528,6 +534,21 @@ function App() {
     };
 
     intervalRef.current = setInterval(updateSession, 100);
+  };
+
+  // Helper function to determine if time should progress based on user action
+  const getShouldProgressTime = (phase) => {
+    switch (phase) {
+      case 'inhale':
+        return isBreathButtonPressed; // User must press for inhale
+      case 'hold':
+      case 'holdAfter':
+        return isBreathButtonPressed; // User must keep pressing for hold
+      case 'exhale':
+        return !isBreathButtonPressed; // User must release for exhale
+      default:
+        return false;
+    }
   };
 
   const completeSession = () => {
