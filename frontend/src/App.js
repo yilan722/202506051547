@@ -357,10 +357,9 @@ function App() {
     }
   };
 
-  // Play audio effects
+  // Play audio effects and background sounds
   const playAudioEffect = (type) => {
     try {
-      // For now, we'll use a simple beep sound or web audio API
       if (audioContext) {
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
@@ -389,6 +388,87 @@ function App() {
       }
     } catch (error) {
       console.log('Audio playback failed:', error);
+    }
+  };
+
+  // Create ambient background sound
+  const createAmbientSound = () => {
+    if (!audioContext) return null;
+    
+    try {
+      // Create multiple oscillators for rich ambient texture
+      const oscillators = [];
+      const gainNodes = [];
+      
+      // Deep bass tone (foundation)
+      const bass = audioContext.createOscillator();
+      const bassGain = audioContext.createGain();
+      bass.frequency.setValueAtTime(60, audioContext.currentTime);
+      bass.type = 'sine';
+      bassGain.gain.setValueAtTime(0.1, audioContext.currentTime);
+      bass.connect(bassGain);
+      bassGain.connect(audioContext.destination);
+      
+      // Mid harmonic
+      const mid = audioContext.createOscillator();
+      const midGain = audioContext.createGain();
+      mid.frequency.setValueAtTime(180, audioContext.currentTime);
+      mid.type = 'sine';
+      midGain.gain.setValueAtTime(0.05, audioContext.currentTime);
+      mid.connect(midGain);
+      midGain.connect(audioContext.destination);
+      
+      // High harmonic with slow modulation
+      const high = audioContext.createOscillator();
+      const highGain = audioContext.createGain();
+      const modulator = audioContext.createOscillator();
+      const modulatorGain = audioContext.createGain();
+      
+      modulator.frequency.setValueAtTime(0.2, audioContext.currentTime); // Very slow modulation
+      modulatorGain.gain.setValueAtTime(50, audioContext.currentTime);
+      modulator.connect(modulatorGain);
+      modulatorGain.connect(high.frequency);
+      
+      high.frequency.setValueAtTime(220, audioContext.currentTime);
+      high.type = 'sine';
+      highGain.gain.setValueAtTime(0.03, audioContext.currentTime);
+      high.connect(highGain);
+      highGain.connect(audioContext.destination);
+      
+      // Start all oscillators
+      bass.start();
+      mid.start();
+      high.start();
+      modulator.start();
+      
+      return {
+        stop: () => {
+          bass.stop();
+          mid.stop();
+          high.stop();
+          modulator.stop();
+        }
+      };
+    } catch (error) {
+      console.log('Ambient sound creation failed:', error);
+      return null;
+    }
+  };
+
+  // Start background ambient sound
+  const startAmbientSound = () => {
+    if (backgroundAudio) {
+      backgroundAudio.stop();
+    }
+    const ambient = createAmbientSound();
+    setBackgroundAudio(ambient);
+  };
+
+  // Stop background ambient sound
+  const stopAmbientSound = () => {
+    if (backgroundAudio) {
+      backgroundAudio.stop();
+      setBackgroundAudio(null);
     }
   };
 
