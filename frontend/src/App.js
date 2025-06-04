@@ -592,6 +592,12 @@ function App() {
       timeRemaining: pattern.inhale,
       progress: 0
     });
+    
+    // Start ambient background sound
+    setTimeout(() => {
+      startAmbientSound();
+    }, 500); // Small delay to ensure audio context is ready
+    
     runBreathingCycle();
   };
 
