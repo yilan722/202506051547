@@ -631,12 +631,14 @@ function App() {
   // Handle breath button press
   const handleBreathButtonPress = () => {
     setIsBreathButtonPressed(true);
+    breathButtonRef.current = true; // Update ref immediately
     playAudioEffect('inhale');
   };
 
   // Handle breath button release
   const handleBreathButtonRelease = () => {
     setIsBreathButtonPressed(false);
+    breathButtonRef.current = false; // Update ref immediately
     playAudioEffect('exhale');
   };
 
