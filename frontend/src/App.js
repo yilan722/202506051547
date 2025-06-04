@@ -819,7 +819,10 @@ function App() {
               <p className="text-sm text-slate-400 max-w-2xl text-center leading-relaxed font-light">
                 Help us keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.
               </p>
-              <button className="group relative px-8 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20">
+              <button 
+                onClick={() => setShowDonationModal(true)}
+                className="group relative px-8 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20"
+              >
                 <div className="flex items-center space-x-3">
                   <span className="text-lg">💖</span>
                   <span className="font-light tracking-wide">Support Our Work</span>
