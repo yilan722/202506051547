@@ -703,55 +703,102 @@ function App() {
     const intention = intentions.find(i => i.id === selectedIntention);
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-        <div className="max-w-2xl w-full text-center">
-          <div className="mb-8">
-            <div className="text-6xl mb-4">{intention.icon}</div>
-            <h2 className="text-4xl font-light text-white mb-4">{intention.title}</h2>
-            <p className="text-xl text-slate-300 mb-8">{pattern.description}</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center p-6 relative overflow-hidden">
+        {/* Ambient particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {Array.from({ length: 15 }, (_, i) => (
+            <div
+              key={i}
+              className="absolute w-px h-px bg-purple-200 rounded-full opacity-30 animate-twinkle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 8}s`,
+                animationDuration: `${3 + Math.random() * 4}s`
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="max-w-3xl w-full text-center relative z-10">
+          {/* Header section */}
+          <div className="mb-12">
+            <div className="text-7xl mb-8 filter drop-shadow-2xl">{intention.icon}</div>
+            <h2 className="text-5xl font-extralight text-white mb-6 tracking-wider leading-tight">{intention.title}</h2>
+            <div className="w-24 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto mb-6"></div>
+            <p className="text-xl text-purple-200 mb-12 font-light leading-relaxed">{pattern.description}</p>
           </div>
 
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl p-8 mb-8">
-            <h3 className="text-2xl text-white mb-6">{pattern.name}</h3>
-            <div className="grid grid-cols-2 gap-6 text-center">
-              <div>
-                <div className="text-3xl text-blue-300 font-bold">{pattern.inhale}s</div>
-                <div className="text-slate-300">Inhale</div>
+          {/* Breathing pattern card with elegant design */}
+          <div className="bg-gradient-to-br from-white/5 via-white/10 to-white/5 backdrop-blur-2xl rounded-3xl p-10 mb-12 border border-white/10 shadow-2xl">
+            <h3 className="text-3xl font-light text-white mb-8 tracking-wide">{pattern.name}</h3>
+            
+            {/* Breathing pattern grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center mb-8">
+              <div className="group">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-400/20 to-blue-600/30 border border-blue-400/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-3xl text-blue-300 font-light">{pattern.inhale}s</div>
+                </div>
+                <div className="text-blue-200 font-light tracking-wide">Inhale</div>
               </div>
+              
               {pattern.hold > 0 && (
-                <div>
-                  <div className="text-3xl text-green-300 font-bold">{pattern.hold}s</div>
-                  <div className="text-slate-300">Hold</div>
+                <div className="group">
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-400/20 to-green-600/30 border border-green-400/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                    <div className="text-3xl text-green-300 font-light">{pattern.hold}s</div>
+                  </div>
+                  <div className="text-green-200 font-light tracking-wide">Hold</div>
                 </div>
               )}
-              <div>
-                <div className="text-3xl text-purple-300 font-bold">{pattern.exhale}s</div>
-                <div className="text-slate-300">Exhale</div>
+              
+              <div className="group">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-400/20 to-purple-600/30 border border-purple-400/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-3xl text-purple-300 font-light">{pattern.exhale}s</div>
+                </div>
+                <div className="text-purple-200 font-light tracking-wide">Exhale</div>
               </div>
+              
               {pattern.holdAfter > 0 && (
-                <div>
-                  <div className="text-3xl text-indigo-300 font-bold">{pattern.holdAfter}s</div>
-                  <div className="text-slate-300">Hold</div>
+                <div className="group">
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-400/20 to-indigo-600/30 border border-indigo-400/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                    <div className="text-3xl text-indigo-300 font-light">{pattern.holdAfter}s</div>
+                  </div>
+                  <div className="text-indigo-200 font-light tracking-wide">Hold</div>
                 </div>
               )}
             </div>
-            <div className="mt-6 pt-6 border-t border-white border-opacity-20">
-              <div className="text-lg text-slate-300">
-                {pattern.cycles} breath cycles • Each breath grows your oasis
+            
+            {/* Session details */}
+            <div className="pt-8 border-t border-white/10">
+              <div className="flex items-center justify-center space-x-8 text-slate-300">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                  <span className="font-light">{pattern.cycles} breath cycles</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                  <span className="font-light">Each breath grows your oasis</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="space-y-4">
+          {/* Action buttons */}
+          <div className="space-y-6">
             <button
               onClick={startBreathingSession}
-              className={`w-full py-4 px-8 rounded-2xl bg-gradient-to-r ${pattern.color} text-white text-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-xl`}
+              className={`group relative w-full py-6 px-10 rounded-3xl bg-gradient-to-r ${pattern.color} text-white text-2xl font-light hover:scale-105 transform transition-all duration-500 shadow-2xl overflow-hidden tracking-wide`}
             >
-              {oasisState.totalSessions > 0 ? 'Return to Your Oasis' : 'Begin Your Journey'}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative z-10 flex items-center justify-center space-x-4">
+                <span>{oasisState.totalSessions > 0 ? 'Return to Your Oasis' : 'Begin Your Journey'}</span>
+                <div className="w-3 h-3 bg-white/60 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-500"></div>
+              </div>
             </button>
+            
             <button
               onClick={() => setCurrentScreen('welcome')}
-              className="w-full py-3 px-8 rounded-2xl bg-white bg-opacity-10 text-white hover:bg-opacity-20 transition-all duration-300"
+              className="w-full py-4 px-8 rounded-2xl bg-white/5 backdrop-blur-sm text-white border border-white/20 hover:bg-white/10 transition-all duration-300 font-light tracking-wide"
             >
               Choose Different Intention
             </button>
