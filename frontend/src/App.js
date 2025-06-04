@@ -523,16 +523,19 @@ function App() {
     const totalSessionTime = pattern.cycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.holdAfter);
 
     const updateSession = () => {
+      // Get current button state from React state
+      const currentButtonState = isBreathButtonPressed;
+      
       // Check if user is doing the correct breathing action
       let shouldProgress = false;
       switch (currentPhase) {
         case 'inhale':
         case 'hold':
         case 'holdAfter':
-          shouldProgress = isBreathButtonPressed; // Must be pressing
+          shouldProgress = currentButtonState; // Must be pressing
           break;
         case 'exhale':
-          shouldProgress = !isBreathButtonPressed; // Must be releasing
+          shouldProgress = !currentButtonState; // Must be releasing
           break;
       }
       
@@ -548,10 +551,12 @@ function App() {
         currentCycle,
         currentPhase,
         timeRemaining: Math.ceil(timeRemaining),
-        progress: progressPercentage
+        progress: progressPercentage,
+        shouldProgress, // Add for debugging
+        buttonPressed: currentButtonState // Add for debugging
       }));
 
-      if (timeRemaining <= 0) {
+      if (timeRemaining <= 0 && shouldProgress) { // Only advance phase if user was doing correct action
         if (currentPhase === 'inhale') {
           if (pattern.hold > 0) {
             currentPhase = 'hold';
