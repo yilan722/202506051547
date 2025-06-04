@@ -797,38 +797,114 @@ function App() {
             </div>
           </div>
 
-          {/* Support section with elegant donate button */}
+          {/* Support and Share section with elegant buttons */}
           <div className="mt-16 pt-8 border-t border-slate-700/30">
-            <div className="flex flex-col items-center space-y-6">
+            <div className="flex flex-col items-center space-y-8">
               <h3 className="text-xl font-light text-slate-300 tracking-wide">Support Our Sacred Mission</h3>
               <p className="text-sm text-slate-400 max-w-2xl text-center leading-relaxed font-light">
                 Help us keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.
               </p>
-              <button 
-                onClick={() => {
-                  const amount = window.prompt("Thank you for supporting our mission! 🌱\n\nChoose your donation amount:\n• $5 - Support Our Mission\n• $15 - Nurture Growth\n• $30 - Flourish Together\n\nEnter amount ($5, $15, or $30):", "15");
-                  if (amount && (amount === "5" || amount === "15" || amount === "30")) {
-                    const packageNames = {"5": "Support Our Mission", "15": "Nurture Growth", "30": "Flourish Together"};
-                    if (window.confirm(`Confirm your ${packageNames[amount]} donation of $${amount}?\n\n(This is a demo - no actual payment will be processed)`)) {
-                      alert(`🌱💖 Thank you for your generous ${packageNames[amount]} donation of $${amount}!\n\nYour support helps keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.\n\nMay your kindness bloom like the gardens you've helped create! 🌸`);
+              
+              {/* Button row */}
+              <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg">
+                {/* Donation Button */}
+                <button 
+                  onClick={() => {
+                    const amount = window.prompt("Thank you for supporting our mission! 🌱\n\nChoose your donation amount:\n• $5 - Support Our Mission\n• $15 - Nurture Growth\n• $30 - Flourish Together\n\nEnter amount ($5, $15, or $30):", "15");
+                    if (amount && (amount === "5" || amount === "15" || amount === "30")) {
+                      const packageNames = {"5": "Support Our Mission", "15": "Nurture Growth", "30": "Flourish Together"};
+                      if (window.confirm(`Confirm your ${packageNames[amount]} donation of $${amount}?\n\n(This is a demo - no actual payment will be processed)`)) {
+                        alert(`🌱💖 Thank you for your generous ${packageNames[amount]} donation of $${amount}!\n\nYour support helps keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.\n\nMay your kindness bloom like the gardens you've helped create! 🌸`);
+                      }
+                    } else if (amount !== null) {
+                      alert("Please enter one of the available amounts: $5, $15, or $30");
                     }
-                  } else if (amount !== null) {
-                    alert("Please enter one of the available amounts: $5, $15, or $30");
-                  }
-                }}
-                className="group relative px-8 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20"
-              >
-                <div className="flex items-center space-x-3">
-                  <span className="text-lg">💖</span>
-                  <span className="font-light tracking-wide">Support Our Work</span>
-                  <div className="w-2 h-2 bg-rose-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                </div>
-                
-                {/* Button hover effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              </button>
-              <p className="text-xs text-slate-500 font-light italic">
-                Your support helps cover development and server costs, enabling new features and keeping our sanctuary peaceful.
+                  }}
+                  className="group flex-1 relative px-6 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20"
+                >
+                  <div className="flex items-center justify-center space-x-3">
+                    <span className="text-lg">💖</span>
+                    <span className="font-light tracking-wide">Support Our Work</span>
+                    <div className="w-2 h-2 bg-rose-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                  </div>
+                  
+                  {/* Button hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </button>
+
+                {/* GitHub Share Button */}
+                <button 
+                  onClick={() => {
+                    const confirmed = window.confirm("🌱 Share Your Garden on GitHub! 🌱\n\nThis will provide you with instructions to:\n• Create a GitHub repository\n• Upload your Restorative Lands app\n• Share it with the world\n\nReady to proceed?");
+                    if (confirmed) {
+                      const instructions = `🌟 Upload Your Restorative Lands to GitHub 🌟
+
+📋 STEP-BY-STEP INSTRUCTIONS:
+
+1️⃣ CREATE GITHUB REPOSITORY:
+   • Go to github.com and sign in
+   • Click "New repository" (green button)
+   • Name: "restorative-lands-breathe-bloom"
+   • Description: "A serene meditation app where breath creates digital gardens"
+   • Make it Public ✅
+   • Click "Create repository"
+
+2️⃣ PREPARE YOUR CODE:
+   • Download all files from your current app
+   • Create local folder: "restorative-lands"
+   • Copy frontend/ and backend/ folders
+
+3️⃣ UPLOAD TO GITHUB:
+   Option A - Upload via Web:
+   • Click "uploading an existing file"
+   • Drag all your files/folders
+   • Commit with message: "Initial commit - Restorative Lands meditation app"
+   
+   Option B - Use Git Commands:
+   git init
+   git add .
+   git commit -m "Initial commit - Restorative Lands meditation app"
+   git remote add origin [your-repo-url]
+   git push -u origin main
+
+4️⃣ ENHANCE YOUR REPOSITORY:
+   • Add README.md with app description
+   • Include screenshots of your beautiful UI
+   • Add installation instructions
+   • Tag it: #meditation #wellness #breathing #react
+
+5️⃣ SHARE YOUR CREATION:
+   • Copy repository URL
+   • Share on social media with #RestorativeLands
+   • Submit to meditation app communities
+   • Let others find peace in your digital garden! 🌸
+
+🎉 Your peaceful oasis will now live forever on GitHub!
+
+Would you like me to open GitHub in a new tab?`;
+                      
+                      alert(instructions);
+                      
+                      if (window.confirm("Open GitHub in a new tab to get started?")) {
+                        window.open("https://github.com/new", "_blank");
+                      }
+                    }
+                  }}
+                  className="group flex-1 relative px-6 py-4 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 border border-emerald-400/30 rounded-2xl text-emerald-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-emerald-500/20"
+                >
+                  <div className="flex items-center justify-center space-x-3">
+                    <span className="text-lg">🌱</span>
+                    <span className="font-light tracking-wide">Share on GitHub</span>
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                  </div>
+                  
+                  {/* Button hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </button>
+              </div>
+              
+              <p className="text-xs text-slate-500 font-light italic text-center">
+                Your support helps cover development and server costs • Share your garden to inspire others on their mindfulness journey
               </p>
             </div>
           </div>
