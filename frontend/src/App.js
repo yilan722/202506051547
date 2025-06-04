@@ -350,10 +350,18 @@ function App() {
   const breathButtonRef = useRef(false); // Add ref for real-time button state
 
   // Initialize audio context on user interaction
-  const initializeAudio = () => {
+  const initializeAudio = async () => {
     if (!audioContext) {
-      const context = new (window.AudioContext || window.webkitAudioContext)();
-      setAudioContext(context);
+      try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        if (context.state === 'suspended') {
+          await context.resume();
+        }
+        setAudioContext(context);
+        console.log('Audio context initialized successfully:', context.state);
+      } catch (error) {
+        console.error('Failed to initialize audio context:', error);
+      }
     }
   };
 
