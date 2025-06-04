@@ -391,20 +391,63 @@ function App() {
     }
   };
 
-  // Handle breath button interactions
-  const handleBreathButtonPress = () => {
-    setIsBreathButtonPressed(true);
-    if (breathingSession.currentPhase === 'inhale') {
-      playAudioEffect('inhale');
+  // Handle donation processing
+  const handleDonation = async () => {
+    setIsProcessingDonation(true);
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || ''}/api/donations/create-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: donationAmount,
+          origin_url: window.location.origin,
+          donor_name: 'Anonymous Supporter',
+          donor_email: null
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create donation session');
+      }
+
+      const data = await response.json();
+      
+      // For demo purposes, simulate payment success
+      setTimeout(async () => {
+        try {
+          await fetch(`${process.env.REACT_APP_BACKEND_URL || ''}/api/donations/confirm/${data.session_id}`, {
+            method: 'POST'
+          });
+          
+          setIsProcessingDonation(false);
+          setShowDonationModal(false);
+          
+          // Show success message
+          alert(`Thank you for your ${donationAmount === 5 ? 'Support' : donationAmount === 15 ? 'Growth' : 'Flourishing'} donation of $${donationAmount}! Your generosity helps keep Restorative Lands peaceful and ad-free. 🌱💖`);
+          
+        } catch (error) {
+          console.error('Error confirming donation:', error);
+          setIsProcessingDonation(false);
+          alert('Donation completed but confirmation failed. Please contact support if needed.');
+        }
+      }, 2000); // Simulate 2 second processing time
+      
+    } catch (error) {
+      console.error('Error processing donation:', error);
+      setIsProcessingDonation(false);
+      alert('Failed to process donation. Please try again later.');
     }
   };
 
-  const handleBreathButtonRelease = () => {
-    setIsBreathButtonPressed(false);
-    if (breathingSession.currentPhase === 'exhale') {
-      playAudioEffect('exhale');
-    }
-  };
+  // Donation packages
+  const donationPackages = [
+    { amount: 5, name: 'Support Our Mission', description: 'Help keep the app ad-free', icon: '🌱' },
+    { amount: 15, name: 'Nurture Growth', description: 'Support new features', icon: '🌿' },
+    { amount: 30, name: 'Flourish Together', description: 'Help us reach more souls', icon: '🌳' }
+  ];
 
   // Load user's oasis from localStorage
   useEffect(() => {
