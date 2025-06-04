@@ -339,7 +339,19 @@ function App() {
     progress: 0
   });
   const [oasisState, setOasisState] = useState({ elements: [], totalSessions: 0 });
+  const [isBreathButtonPressed, setIsBreathButtonPressed] = useState(false);
+  const [audioContext, setAudioContext] = useState(null);
+  const [backgroundAudio, setBackgroundAudio] = useState(null);
   const intervalRef = useRef(null);
+  const audioRef = useRef(null);
+
+  // Initialize audio context on user interaction
+  const initializeAudio = () => {
+    if (!audioContext) {
+      const context = new (window.AudioContext || window.webkitAudioContext)();
+      setAudioContext(context);
+    }
+  };
 
   // Load user's oasis from localStorage
   useEffect(() => {
