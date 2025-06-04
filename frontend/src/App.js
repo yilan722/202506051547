@@ -613,6 +613,34 @@ function App() {
     }
   };
 
+  // Handle breath button press
+  const handleBreathButtonPress = () => {
+    setIsBreathButtonPressed(true);
+    playAudioEffect('inhale');
+  };
+
+  // Handle breath button release
+  const handleBreathButtonRelease = () => {
+    setIsBreathButtonPressed(false);
+    playAudioEffect('exhale');
+  };
+
+  // Get action guidance text
+  const getActionGuidance = () => {
+    const { currentPhase } = breathingSession;
+    switch (currentPhase) {
+      case 'inhale':
+        return 'Press and hold the button to breathe in deeply';
+      case 'hold':
+      case 'holdAfter':
+        return 'Keep holding the button to maintain your breath';
+      case 'exhale':
+        return 'Release the button to let your breath flow out';
+      default:
+        return 'Follow the breathing rhythm';
+    }
+  };
+
   const completeSession = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
