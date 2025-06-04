@@ -597,26 +597,55 @@ function App() {
 
   if (currentScreen === 'welcome') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-        <div className="max-w-4xl w-full text-center">
-          <div className="mb-12">
-            <h1 className="text-6xl font-light text-white mb-4 tracking-wide">
-              Restorative Lands
-            </h1>
-            <p className="text-xl text-slate-300 mb-2">Breathe & Bloom</p>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Your breath creates your personal oasis. Return to the sanctuary you've grown with each session.
-            </p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center p-6 relative overflow-hidden">
+        {/* Ambient background particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {Array.from({ length: 20 }, (_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-white rounded-full opacity-20 animate-twinkle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 10}s`,
+                animationDuration: `${4 + Math.random() * 6}s`
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="max-w-5xl w-full text-center relative z-10">
+          {/* Header with elegant styling */}
+          <div className="mb-16">
+            <div className="mb-8">
+              <h1 className="text-7xl font-extralight text-white mb-6 tracking-widest leading-tight">
+                Restorative Lands
+              </h1>
+              <div className="w-32 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto mb-6"></div>
+              <p className="text-2xl text-purple-200 mb-4 font-light tracking-wide">Breathe & Bloom</p>
+              <p className="text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed font-light">
+                Your breath creates your personal oasis. Return to the sanctuary you've grown with each mindful session.
+              </p>
+            </div>
+            
+            {/* Progress indicator with elegant styling */}
             {oasisState.totalSessions > 0 && (
-              <div className="mt-4 p-4 bg-green-900 bg-opacity-30 rounded-lg inline-block">
-                <p className="text-green-300">🌱 Your oasis has {oasisState.elements.length} living elements from {oasisState.totalSessions} sessions</p>
+              <div className="mt-8 p-6 bg-gradient-to-r from-emerald-900/30 via-teal-900/30 to-cyan-900/30 rounded-3xl backdrop-blur-xl border border-emerald-700/20 inline-block shadow-2xl">
+                <div className="flex items-center justify-center space-x-4">
+                  <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                  <p className="text-emerald-200 font-light text-lg">
+                    🌱 Your sanctuary flourishes with <span className="font-medium text-emerald-100">{oasisState.elements.length}</span> living elements from <span className="font-medium text-emerald-100">{oasisState.totalSessions}</span> sacred sessions
+                  </p>
+                  <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                </div>
               </div>
             )}
           </div>
           
-          <div className="mb-12">
-            <h2 className="text-2xl text-white mb-8">How can we help you find your calm today?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Intention selection with refined cards */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-light text-white mb-12 tracking-wide">How may we guide your journey today?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {intentions.map((intention) => (
                 <button
                   key={intention.id}
@@ -624,13 +653,44 @@ function App() {
                     setSelectedIntention(intention.id);
                     setCurrentScreen('preparation');
                   }}
-                  className={`group p-6 rounded-2xl bg-gradient-to-br ${intention.gradient} hover:scale-105 transform transition-all duration-300 text-white shadow-xl hover:shadow-2xl`}
+                  className={`group relative p-8 rounded-3xl bg-gradient-to-br ${intention.gradient} hover:scale-105 transform transition-all duration-500 text-white shadow-2xl hover:shadow-3xl overflow-hidden`}
                 >
-                  <div className="text-4xl mb-4">{intention.icon}</div>
-                  <h3 className="text-xl font-semibold mb-2">{intention.title}</h3>
-                  <p className="text-sm opacity-90">{intention.subtitle}</p>
+                  {/* Card glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="text-5xl mb-6 filter drop-shadow-lg">{intention.icon}</div>
+                    <h3 className="text-xl font-medium mb-3 tracking-wide">{intention.title}</h3>
+                    <p className="text-sm opacity-90 font-light leading-relaxed">{intention.subtitle}</p>
+                  </div>
+                  
+                  {/* Subtle border accent */}
+                  <div className="absolute inset-0 rounded-3xl border border-white/20 group-hover:border-white/40 transition-colors duration-500"></div>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Support section with elegant donate button */}
+          <div className="mt-16 pt-8 border-t border-slate-700/30">
+            <div className="flex flex-col items-center space-y-6">
+              <h3 className="text-xl font-light text-slate-300 tracking-wide">Support Our Sacred Mission</h3>
+              <p className="text-sm text-slate-400 max-w-2xl text-center leading-relaxed font-light">
+                Help us keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.
+              </p>
+              <button className="group relative px-8 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20">
+                <div className="flex items-center space-x-3">
+                  <span className="text-lg">💖</span>
+                  <span className="font-light tracking-wide">Support Our Work</span>
+                  <div className="w-2 h-2 bg-rose-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                </div>
+                
+                {/* Button hover effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </button>
+              <p className="text-xs text-slate-500 font-light italic">
+                Your support helps cover development and server costs, enabling new features and keeping our sanctuary peaceful.
+              </p>
             </div>
           </div>
         </div>
