@@ -347,6 +347,7 @@ function App() {
   const [isProcessingDonation, setIsProcessingDonation] = useState(false);
   const intervalRef = useRef(null);
   const audioRef = useRef(null);
+  const breathButtonRef = useRef(false); // Add ref for real-time button state
 
   // Initialize audio context on user interaction
   const initializeAudio = () => {
