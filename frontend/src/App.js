@@ -164,7 +164,7 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown }) => {
       type: selectedType,
       x: Math.max(5, Math.min(95, x)), // Ensure bounds
       y: Math.max(35, Math.min(95, y)), // Ensure bounds
-      size: Math.random() * 0.4 + 0.6, // 0.6-1.0 scale
+      size: Math.random() * 0.6 + 0.8, // 0.8-1.4 scale (increased from 0.6-1.0)
       color: typeConfig.colors[Math.floor(Math.random() * typeConfig.colors.length)],
       rotation: Math.random() * 360,
       growTime: typeConfig.growTime,
