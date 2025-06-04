@@ -456,6 +456,7 @@ function App() {
 
   const startBreathingSession = () => {
     const pattern = BREATHING_PATTERNS[selectedIntention];
+    initializeAudio(); // Initialize audio when session starts
     setCurrentScreen('breathing');
     setBreathingSession({
       isActive: true,
