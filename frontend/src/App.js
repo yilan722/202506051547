@@ -799,7 +799,17 @@ function App() {
                 Help us keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.
               </p>
               <button 
-                onClick={() => setShowDonationModal(true)}
+                onClick={() => {
+                  const amount = window.prompt("Thank you for supporting our mission! 🌱\n\nChoose your donation amount:\n• $5 - Support Our Mission\n• $15 - Nurture Growth\n• $30 - Flourish Together\n\nEnter amount ($5, $15, or $30):", "15");
+                  if (amount && (amount === "5" || amount === "15" || amount === "30")) {
+                    const packageNames = {"5": "Support Our Mission", "15": "Nurture Growth", "30": "Flourish Together"};
+                    if (window.confirm(`Confirm your ${packageNames[amount]} donation of $${amount}?\n\n(This is a demo - no actual payment will be processed)`)) {
+                      alert(`🌱💖 Thank you for your generous ${packageNames[amount]} donation of $${amount}!\n\nYour support helps keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.\n\nMay your kindness bloom like the gardens you've helped create! 🌸`);
+                    }
+                  } else if (amount !== null) {
+                    alert("Please enter one of the available amounts: $5, $15, or $30");
+                  }
+                }}
                 className="group relative px-8 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20"
               >
                 <div className="flex items-center space-x-3">
