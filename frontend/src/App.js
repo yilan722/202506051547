@@ -54,14 +54,48 @@ const BREATHING_PATTERNS = {
   }
 };
 
-// Oasis element types for procedural generation - colors adapted for barren earth restoration
+// Oasis element types for procedural generation - adapted from garden reference image
 const ELEMENT_TYPES = {
   grass: { weight: 40, growTime: 1.5, colors: ['#22c55e', '#16a34a', '#15803d', '#84cc16'] },
-  flower: { weight: 25, growTime: 2.5, colors: ['#f59e0b', '#eab308', '#d97706', '#dc2626', '#f472b6'] },
+  flower: { weight: 25, growTime: 2.5, colors: ['#f59e0b', '#eab308', '#d97706', '#dc2626', '#f472b6', '#ec4899'] },
   tree: { weight: 15, growTime: 4, colors: ['#16a34a', '#15803d', '#166534', '#064e3b'] },
+  palmTree: { weight: 8, growTime: 5, colors: ['#16a34a', '#15803d', '#166534'] },
+  succulent: { weight: 12, growTime: 3, colors: ['#84cc16', '#22c55e', '#65a30d'] },
   butterfly: { weight: 10, growTime: 1, colors: ['#f59e0b', '#eab308', '#f97316', '#3b82f6'] },
-  crystal: { weight: 5, growTime: 3, colors: ['#06b6d4', '#0891b2', '#0e7490', '#0284c7'] },
-  mushroom: { weight: 5, growTime: 2, colors: ['#dc2626', '#b91c1c', '#991b1b', '#f97316'] }
+  crystal: { weight: 3, growTime: 3, colors: ['#06b6d4', '#0891b2', '#0e7490', '#0284c7'] },
+  mushroom: { weight: 7, growTime: 2, colors: ['#dc2626', '#b91c1c', '#991b1b', '#f97316'] }
+};
+
+// Audio resources for immersive experience
+const AUDIO_SOURCES = {
+  desert: 'https://www.soundjay.com/misc/sounds/wind-desert.mp3', // Placeholder
+  garden: 'https://www.soundjay.com/nature/sounds/forest-birds.mp3', // Placeholder
+  inhale: 'https://www.soundjay.com/misc/sounds/bell-ringing.mp3', // Placeholder
+  exhale: 'https://www.soundjay.com/misc/sounds/wind-chimes.mp3' // Placeholder
+};
+
+// Completion messages based on intention
+const COMPLETION_MESSAGES = {
+  'calm-before-event': {
+    english: "You've found your calm center; you're ready to step forward with confidence.",
+    icon: "🎯"
+  },
+  'drift-to-sleep': {
+    english: "Release the day, and allow this gentle rhythm to guide you into peaceful, restorative sleep.",
+    icon: "🌙"
+  },
+  'soothe-mind': {
+    english: "You've created a moment of stillness for yourself; may this gentle space bring lightness to your spirit.",
+    icon: "🌸"
+  },
+  'sharpen-focus': {
+    english: "Your mind is now clearer, your breath steady; carry this focused calm into your next endeavor.",
+    icon: "🧠"
+  },
+  'just-breathe': {
+    english: "Well done for taking this time to connect with your breath; each one is a gift of presence to yourself.",
+    icon: "🍃"
+  }
 };
 
 // Oasis Canvas Component
