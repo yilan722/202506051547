@@ -790,10 +790,11 @@ function App() {
   if (currentScreen === 'completion') {
     const pattern = BREATHING_PATTERNS[selectedIntention];
     const intention = intentions.find(i => i.id === selectedIntention);
+    const completionMessage = COMPLETION_MESSAGES[selectedIntention];
     
     return (
       <div className="min-h-screen relative flex items-center justify-center p-4">
-        {/* Show completed oasis */}
+        {/* Show completed oasis with video background placeholder */}
         <OasisCanvas 
           oasisState={oasisState}
           breathProgress={100}
@@ -802,28 +803,29 @@ function App() {
         
         <div className="max-w-2xl w-full text-center z-10">
           <div className="mb-8">
-            <div className="text-8xl mb-6">🌸</div>
+            <div className="text-8xl mb-6">{completionMessage.icon}</div>
             <h2 className="text-5xl font-light text-white mb-4 drop-shadow-lg">Your Oasis Grows</h2>
-            <p className="text-2xl text-white opacity-90 mb-8 leading-relaxed drop-shadow-lg">
-              Beautiful work! Your breathing has added new life to your personal sanctuary. 
-              Each session makes it more magical.
-            </p>
-          </div>
-
-          <div className="bg-black bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 mb-8">
-            <h3 className="text-2xl text-white mb-6">Session Complete</h3>
-            <div className="grid grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="text-3xl text-green-300 font-bold">{intention.icon}</div>
-                <div className="text-white mt-2">{intention.title}</div>
+            
+            {/* Personalized Completion Message */}
+            <div className="bg-black bg-opacity-50 backdrop-blur-lg rounded-3xl p-8 mb-8">
+              <h3 className="text-2xl text-white mb-6">Session Complete</h3>
+              <div className="text-xl text-white leading-relaxed mb-6 font-light">
+                "{completionMessage.english}"
               </div>
-              <div>
-                <div className="text-3xl text-blue-300 font-bold">{oasisState.elements.length}</div>
-                <div className="text-white mt-2">Living Elements</div>
-              </div>
-              <div>
-                <div className="text-3xl text-purple-300 font-bold">{oasisState.totalSessions}</div>
-                <div className="text-white mt-2">Total Sessions</div>
+              
+              <div className="grid grid-cols-3 gap-6 text-center">
+                <div>
+                  <div className="text-3xl text-green-300 font-bold">{intention.icon}</div>
+                  <div className="text-white mt-2">{intention.title}</div>
+                </div>
+                <div>
+                  <div className="text-3xl text-blue-300 font-bold">{oasisState.elements.length}</div>
+                  <div className="text-white mt-2">Living Elements</div>
+                </div>
+                <div>
+                  <div className="text-3xl text-purple-300 font-bold">{oasisState.totalSessions}</div>
+                  <div className="text-white mt-2">Total Sessions</div>
+                </div>
               </div>
             </div>
           </div>
