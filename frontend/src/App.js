@@ -553,11 +553,17 @@ function App() {
 
   // Start background ambient sound
   const startAmbientSound = () => {
+    console.log('startAmbientSound called, audioContext:', audioContext);
     if (backgroundAudio) {
       backgroundAudio.stop();
     }
-    const ambient = createAmbientSound();
-    setBackgroundAudio(ambient);
+    if (audioContext && audioContext.state === 'running') {
+      const ambient = createAmbientSound();
+      setBackgroundAudio(ambient);
+      console.log('Ambient sound created and set:', ambient);
+    } else {
+      console.log('Audio context not ready for ambient sound');
+    }
   };
 
   // Stop background ambient sound
