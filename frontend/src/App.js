@@ -342,6 +342,9 @@ function App() {
   const [isBreathButtonPressed, setIsBreathButtonPressed] = useState(false);
   const [audioContext, setAudioContext] = useState(null);
   const [backgroundAudio, setBackgroundAudio] = useState(null);
+  const [showDonationModal, setShowDonationModal] = useState(false);
+  const [donationAmount, setDonationAmount] = useState(15);
+  const [isProcessingDonation, setIsProcessingDonation] = useState(false);
   const intervalRef = useRef(null);
   const audioRef = useRef(null);
 
