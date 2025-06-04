@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,7 +6,7 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional, Dict
 import uuid
 from datetime import datetime
 
@@ -34,6 +34,44 @@ class StatusCheck(BaseModel):
 
 class StatusCheckCreate(BaseModel):
     client_name: str
+
+# Payment models
+class DonationRequest(BaseModel):
+    amount: float
+    origin_url: str
+    donor_name: Optional[str] = None
+    donor_email: Optional[str] = None
+
+class CheckoutSessionResponse(BaseModel):
+    url: str
+    session_id: str
+
+class PaymentStatusResponse(BaseModel):
+    status: str
+    payment_status: str
+    amount_total: int
+    currency: str
+
+class PaymentTransaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    session_id: str
+    amount: float
+    currency: str = "usd"
+    status: str = "pending"
+    payment_status: str = "unpaid"
+    donor_name: Optional[str] = None
+    donor_email: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    completed_at: Optional[datetime] = None
+    metadata: Dict = Field(default_factory=dict)
+
+# Donation packages (predefined for security)
+DONATION_PACKAGES = {
+    "small": {"amount": 5.0, "name": "Support Our Mission", "description": "Help keep the app ad-free"},
+    "medium": {"amount": 15.0, "name": "Nurture Growth", "description": "Support new features and improvements"},
+    "large": {"amount": 30.0, "name": "Flourish Together", "description": "Help us reach more souls seeking peace"},
+    "custom": {"min_amount": 1.0, "max_amount": 500.0}
+}
 
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
