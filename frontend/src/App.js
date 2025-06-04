@@ -677,9 +677,12 @@ function App() {
     }
   ];
 
-  const startBreathingSession = () => {
+  const startBreathingSession = async () => {
     const pattern = BREATHING_PATTERNS[selectedIntention];
-    initializeAudio(); // Initialize audio when session starts
+    
+    // Initialize audio and wait for it to be ready
+    await initializeAudio();
+    
     setCurrentScreen('breathing');
     setBreathingSession({
       isActive: true,
@@ -689,10 +692,18 @@ function App() {
       progress: 0
     });
     
-    // Start ambient background sound
+    // Start ambient background sound after a short delay to ensure audio context is ready
     setTimeout(() => {
-      startAmbientSound();
-    }, 500); // Small delay to ensure audio context is ready
+      if (audioContext && audioContext.state === 'running') {
+        startAmbientSound();
+        console.log('Ambient sound started successfully');
+      } else {
+        console.log('Audio context not ready, retrying...');
+        setTimeout(() => {
+          startAmbientSound();
+        }, 1000);
+      }
+    }, 1000); // Increased delay to 1 second
     
     runBreathingCycle();
   };
