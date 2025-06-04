@@ -76,7 +76,7 @@ DONATION_PACKAGES = {
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Restorative Lands API - Breathe & Bloom"}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
@@ -89,6 +89,102 @@ async def create_status_check(input: StatusCheckCreate):
 async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**status_check) for status_check in status_checks]
+
+# Donation endpoints
+@api_router.post("/donations/create-session", response_model=CheckoutSessionResponse)
+async def create_donation_session(request: DonationRequest):
+    """Create a donation checkout session"""
+    
+    try:
+        # Validate amount
+        if request.amount < DONATION_PACKAGES["custom"]["min_amount"]:
+            raise HTTPException(400, f"Minimum donation amount is ${DONATION_PACKAGES['custom']['min_amount']}")
+        if request.amount > DONATION_PACKAGES["custom"]["max_amount"]:
+            raise HTTPException(400, f"Maximum donation amount is ${DONATION_PACKAGES['custom']['max_amount']}")
+        
+        # Create session ID
+        session_id = f"cs_demo_{datetime.utcnow().timestamp()}"
+        
+        # Create payment transaction record
+        transaction = PaymentTransaction(
+            session_id=session_id,
+            amount=request.amount,
+            donor_name=request.donor_name,
+            donor_email=request.donor_email,
+            metadata={
+                "source": "restorative_lands_donation",
+                "origin_url": request.origin_url
+            }
+        )
+        
+        # Store in database
+        await db.payment_transactions.insert_one(transaction.dict())
+        
+        # For demo, create a mock payment URL
+        demo_checkout_url = f"{request.origin_url}/demo-payment?session_id={session_id}&amount={request.amount}"
+        
+        return CheckoutSessionResponse(
+            url=demo_checkout_url,
+            session_id=session_id
+        )
+        
+    except Exception as e:
+        raise HTTPException(500, f"Failed to create checkout session: {str(e)}")
+
+@api_router.get("/donations/status/{session_id}", response_model=PaymentStatusResponse)
+async def get_donation_status(session_id: str):
+    """Get the status of a donation session"""
+    
+    transaction = await db.payment_transactions.find_one({"session_id": session_id})
+    
+    if not transaction:
+        raise HTTPException(404, "Session not found")
+    
+    return PaymentStatusResponse(
+        status=transaction["status"],
+        payment_status=transaction["payment_status"],
+        amount_total=int(transaction["amount"] * 100),  # Convert to cents
+        currency=transaction["currency"]
+    )
+
+@api_router.post("/donations/confirm/{session_id}")
+async def confirm_donation(session_id: str):
+    """Confirm a donation (demo endpoint)"""
+    
+    transaction = await db.payment_transactions.find_one({"session_id": session_id})
+    
+    if not transaction:
+        raise HTTPException(404, "Session not found")
+    
+    # Update transaction status
+    update_data = {
+        "status": "complete",
+        "payment_status": "paid",
+        "completed_at": datetime.utcnow()
+    }
+    
+    await db.payment_transactions.update_one(
+        {"session_id": session_id},
+        {"$set": update_data}
+    )
+    
+    return {"message": "Donation confirmed successfully", "session_id": session_id}
+
+@api_router.get("/donations/packages")
+async def get_donation_packages():
+    """Get available donation packages"""
+    return DONATION_PACKAGES
+
+# Oasis stats endpoint
+@api_router.get("/oasis/stats")
+async def get_global_oasis_stats():
+    """Get global oasis statistics"""
+    return {
+        "total_sessions": 1000,
+        "total_elements_grown": 25000,
+        "active_gardens": 150,
+        "collective_breath_cycles": 50000
+    }
 
 # Include the router in the main app
 app.include_router(api_router)
