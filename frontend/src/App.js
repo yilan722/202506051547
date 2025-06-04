@@ -1241,6 +1241,20 @@ Would you like me to open GitHub in a new tab?`;
             </div>
           </div>
 
+          {/* Audio Control Button */}
+          <button
+            onClick={() => {
+              if (backgroundAudio) {
+                stopAmbientSound();
+              } else {
+                startAmbientSound();
+              }
+            }}
+            className="absolute top-8 left-8 w-14 h-14 rounded-full bg-black/20 backdrop-blur-sm text-white/80 hover:text-white hover:bg-black/40 transition-all duration-300 flex items-center justify-center z-30 border border-white/10 text-xl"
+          >
+            {backgroundAudio ? '🔇' : '🎵'}
+          </button>
+
           {/* Refined Exit Button */}
           <button
             onClick={resetApp}
