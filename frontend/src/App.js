@@ -353,6 +353,56 @@ function App() {
     }
   };
 
+  // Play audio effects
+  const playAudioEffect = (type) => {
+    try {
+      // For now, we'll use a simple beep sound or web audio API
+      if (audioContext) {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        // Different tones for different effects
+        switch (type) {
+          case 'inhale':
+            oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A note
+            break;
+          case 'exhale':
+            oscillator.frequency.setValueAtTime(330, audioContext.currentTime); // E note
+            break;
+          default:
+            oscillator.frequency.setValueAtTime(523, audioContext.currentTime); // C note
+        }
+        
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.1);
+        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+      }
+    } catch (error) {
+      console.log('Audio playback failed:', error);
+    }
+  };
+
+  // Handle breath button interactions
+  const handleBreathButtonPress = () => {
+    setIsBreathButtonPressed(true);
+    if (breathingSession.currentPhase === 'inhale') {
+      playAudioEffect('inhale');
+    }
+  };
+
+  const handleBreathButtonRelease = () => {
+    setIsBreathButtonPressed(false);
+    if (breathingSession.currentPhase === 'exhale') {
+      playAudioEffect('exhale');
+    }
+  };
+
   // Load user's oasis from localStorage
   useEffect(() => {
     const savedOasis = localStorage.getItem('userOasis');
