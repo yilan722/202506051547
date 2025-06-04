@@ -536,18 +536,51 @@ function App() {
     intervalRef.current = setInterval(updateSession, 100);
   };
 
-  // Helper function to determine if time should progress based on user action
-  const getShouldProgressTime = (phase) => {
-    switch (phase) {
+  // Helper function to get breathing instruction for the unified button
+  const getBreathingInstruction = () => {
+    const { currentPhase } = breathingSession;
+    switch (currentPhase) {
       case 'inhale':
-        return isBreathButtonPressed; // User must press for inhale
+        return 'Press & Hold';
       case 'hold':
       case 'holdAfter':
-        return isBreathButtonPressed; // User must keep pressing for hold
+        return 'Keep Holding';
       case 'exhale':
-        return !isBreathButtonPressed; // User must release for exhale
+        return 'Release';
       default:
-        return false;
+        return 'Breathe';
+    }
+  };
+
+  // Helper function to get action guidance
+  const getActionGuidance = () => {
+    const { currentPhase } = breathingSession;
+    const shouldProgress = getShouldProgressTime(currentPhase);
+    
+    if (!shouldProgress) {
+      switch (currentPhase) {
+        case 'inhale':
+          return '⏸️ Press the button to start inhaling and advance time';
+        case 'hold':
+        case 'holdAfter':
+          return '⏸️ Keep holding the button to continue';
+        case 'exhale':
+          return '⏸️ Release the button to start exhaling';
+        default:
+          return '';
+      }
+    }
+    
+    switch (currentPhase) {
+      case 'inhale':
+        return '✅ Perfect! Keep breathing in while holding';
+      case 'hold':
+      case 'holdAfter':
+        return '✅ Great! Hold your breath and keep pressing';
+      case 'exhale':
+        return '✅ Excellent! Breathe out slowly';
+      default:
+        return '';
     }
   };
 
