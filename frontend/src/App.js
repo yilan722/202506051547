@@ -1620,6 +1620,81 @@ function App() {
     </>
   );
 
+  return (
+    <>
+      {/* Main App Content */}
+      {currentScreen === 'welcome' && renderWelcomeScreen()}
+      {currentScreen === 'preparation' && renderPreparationScreen()}
+      {currentScreen === 'breathing' && renderBreathingScreen()}
+      {currentScreen === 'completion' && renderCompletionScreen()}
+
+      {/* Zen Coin System Modals */}
+      {achievementNotification && (
+        <AchievementNotification
+          achievement={achievementNotification}
+          onClose={() => setAchievementNotification(null)}
+        />
+      )}
+
+      {showZenCoinMenu && (
+        <ZenCoinMenu
+          userProfile={userProfile}
+          onMoodDiary={() => {
+            setShowZenCoinMenu(false);
+            setShowMoodDiary(true);
+          }}
+          onCourses={() => {
+            setShowZenCoinMenu(false);
+            setShowCourses(true);
+          }}
+          onAchievements={() => {
+            setShowZenCoinMenu(false);
+            setShowAchievements(true);
+          }}
+          onLeaderboard={() => {
+            setShowZenCoinMenu(false);
+            setShowLeaderboard(true);
+          }}
+          onClose={() => setShowZenCoinMenu(false)}
+        />
+      )}
+
+      {showMoodDiary && (
+        <MoodDiary
+          userProfile={userProfile}
+          onMoodSubmit={submitMoodDiary}
+          onClose={() => setShowMoodDiary(false)}
+        />
+      )}
+
+      {showCourses && (
+        <CoursesModal
+          userProfile={userProfile}
+          courses={courses}
+          onCourseComplete={completeCourse}
+          onClose={() => setShowCourses(false)}
+        />
+      )}
+
+      {showAchievements && (
+        <AchievementGallery
+          userProfile={userProfile}
+          allAchievements={achievements}
+          userAchievements={userAchievements}
+          onClose={() => setShowAchievements(false)}
+        />
+      )}
+
+      {showLeaderboard && (
+        <Leaderboard
+          leaderboard={leaderboard}
+          userProfile={userProfile}
+          onClose={() => setShowLeaderboard(false)}
+        />
+      )}
+    </>
+  );
+
   if (currentScreen === 'preparation') {
     const pattern = BREATHING_PATTERNS[selectedIntention];
     const intention = intentions.find(i => i.id === selectedIntention);
