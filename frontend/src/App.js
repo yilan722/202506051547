@@ -124,23 +124,62 @@ const COMPLETION_MESSAGES = {
   }
 };
 
-// Oasis Canvas Component - Now uses GIF instead of individual elements
-const OasisCanvas = ({ oasisState, breathProgress, onElementGrown }) => {
+// Oasis Canvas Component - Dynamic media based on intention
+const OasisCanvas = ({ oasisState, breathProgress, onElementGrown, selectedIntention }) => {
   const canvasRef = useRef(null);
+  const videoRef = useRef(null);
+  
+  // Get media and pattern for current intention
+  const media = INTENTION_MEDIA[selectedIntention];
+  const pattern = BREATHING_PATTERNS[selectedIntention];
+  
+  // Calculate total session duration
+  const totalSessionTime = pattern.cycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.holdAfter);
+  
+  // Calculate playback rate to match session duration
+  const playbackRate = media.duration / totalSessionTime;
+  const currentTime = (breathProgress / 100) * totalSessionTime;
+
+  useEffect(() => {
+    if (media.type === 'video' && videoRef.current) {
+      // Set video playback rate and current time based on progress
+      videoRef.current.playbackRate = playbackRate;
+      videoRef.current.currentTime = currentTime;
+      
+      if (breathProgress > 0) {
+        videoRef.current.play().catch(console.log);
+      }
+    }
+  }, [breathProgress, playbackRate, currentTime]);
 
   return (
     <div ref={canvasRef} className="oasis-canvas absolute inset-0 overflow-hidden">
-      {/* Dynamic GIF background that syncs with breathing progress */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url(https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif)',
-          filter: `brightness(${0.7 + (breathProgress / 100) * 0.4}) contrast(${0.9 + (breathProgress / 100) * 0.3})`,
-          animationDuration: `${Math.max(30, 120 - (breathProgress * 0.9))}s`, // Slow down as progress increases
-          animationIterationCount: 'infinite',
-          animationTimingFunction: 'linear'
-        }}
-      ></div>
+      {/* Dynamic background based on intention */}
+      {media.type === 'gif' ? (
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${media.url})`,
+            filter: `brightness(${0.7 + (breathProgress / 100) * 0.4}) contrast(${0.9 + (breathProgress / 100) * 0.3})`,
+            animationDuration: `${totalSessionTime}s`, // Match session duration
+            animationIterationCount: '1', // Play once, no loop
+            animationTimingFunction: 'linear',
+            animationFillMode: 'forwards'
+          }}
+        ></div>
+      ) : (
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            filter: `brightness(${0.7 + (breathProgress / 100) * 0.4}) contrast(${0.9 + (breathProgress / 100) * 0.3})`
+          }}
+          muted
+          playsInline
+        >
+          <source src={media.url} type="video/mp4" />
+        </video>
+      )}
       
       {/* Subtle overlay for text readability */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
