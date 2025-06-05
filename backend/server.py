@@ -579,7 +579,6 @@ async def get_donation_packages():
     """Get available donation packages"""
     return DONATION_PACKAGES
 
-# Oasis stats endpoint
 @api_router.get("/oasis/stats")
 async def get_global_oasis_stats():
     """Get global oasis statistics"""
@@ -589,6 +588,248 @@ async def get_global_oasis_stats():
         "active_gardens": 150,
         "collective_breath_cycles": 50000
     }
+
+# ========== ZEN COIN SYSTEM API ENDPOINTS ==========
+
+# User Profile endpoints
+@api_router.post("/users", response_model=UserProfile)
+async def create_user_profile(user_data: UserProfileCreate):
+    """Create a new user profile"""
+    user = UserProfile(**user_data.dict())
+    await db.user_profiles.insert_one(user.dict())
+    
+    # Award Zen Coins if referred by someone
+    if user_data.referred_by:
+        referrer = await db.user_profiles.find_one({"referral_code": user_data.referred_by})
+        if referrer:
+            await award_zen_coins(
+                referrer["id"],
+                50,
+                AchievementType.FRIEND_REFERRAL,
+                f"Friend referral: {user.username} joined",
+                {"referred_user_id": user.id}
+            )
+            await check_and_award_achievements(referrer["id"])
+    
+    return user
+
+@api_router.get("/users/{user_id}", response_model=UserProfile)
+async def get_user_profile(user_id: str):
+    """Get user profile by ID"""
+    user = await db.user_profiles.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(404, "User not found")
+    return UserProfile(**user)
+
+@api_router.put("/users/{user_id}", response_model=UserProfile)
+async def update_user_profile(user_id: str, updates: dict):
+    """Update user profile"""
+    updates["updated_at"] = datetime.utcnow()
+    result = await db.user_profiles.update_one({"id": user_id}, {"$set": updates})
+    if result.matched_count == 0:
+        raise HTTPException(404, "User not found")
+    
+    user = await db.user_profiles.find_one({"id": user_id})
+    return UserProfile(**user)
+
+# Breathing Session endpoints
+@api_router.post("/breathing-sessions", response_model=BreathingSession)
+async def create_breathing_session(session_data: BreathingSessionCreate):
+    """Record a completed breathing session and award Zen Coins"""
+    session = BreathingSession(
+        **session_data.dict(),
+        zen_coins_earned=10  # Base reward for daily practice
+    )
+    await db.breathing_sessions.insert_one(session.dict())
+    
+    # Update user stats
+    today = date.today()
+    consecutive_days = await calculate_consecutive_days(session.user_id)
+    
+    await db.user_profiles.update_one(
+        {"id": session.user_id},
+        {
+            "$inc": {"total_sessions": 1},
+            "$set": {
+                "last_practice_date": today,
+                "consecutive_days": consecutive_days,
+                "updated_at": datetime.utcnow()
+            }
+        }
+    )
+    
+    # Award Zen Coins for daily practice
+    await award_zen_coins(
+        session.user_id,
+        10,
+        AchievementType.DAILY_PRACTICE,
+        f"Daily practice: {session.pattern_name}",
+        {"session_id": session.id}
+    )
+    
+    # Check for achievements
+    await check_and_award_achievements(session.user_id)
+    
+    return session
+
+@api_router.get("/breathing-sessions/{user_id}")
+async def get_user_sessions(user_id: str, limit: int = 50):
+    """Get user's breathing sessions"""
+    sessions = await db.breathing_sessions.find({"user_id": user_id}).sort("completed_at", -1).limit(limit).to_list(limit)
+    return [BreathingSession(**session) for session in sessions]
+
+# Zen Coin Transaction endpoints
+@api_router.get("/zen-coins/{user_id}/balance")
+async def get_zen_coin_balance(user_id: str):
+    """Get user's current Zen Coin balance"""
+    user = await db.user_profiles.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(404, "User not found")
+    return {"user_id": user_id, "zen_coins": user.get("zen_coins", 0)}
+
+@api_router.get("/zen-coins/{user_id}/transactions")
+async def get_zen_coin_transactions(user_id: str, limit: int = 100):
+    """Get user's Zen Coin transaction history"""
+    transactions = await db.zen_coin_transactions.find({"user_id": user_id}).sort("timestamp", -1).limit(limit).to_list(limit)
+    return [ZenCoinTransaction(**txn) for txn in transactions]
+
+@api_router.post("/zen-coins/award")
+async def award_zen_coins_endpoint(transaction: ZenCoinTransactionCreate):
+    """Award Zen Coins to a user (admin function)"""
+    result = await award_zen_coins(
+        transaction.user_id,
+        transaction.amount,
+        transaction.transaction_type,
+        transaction.description,
+        transaction.metadata
+    )
+    return result
+
+# Achievement endpoints
+@api_router.get("/achievements")
+async def get_all_achievements():
+    """Get all available achievements"""
+    achievements = await db.achievements.find().to_list(1000)
+    return [Achievement(**achievement) for achievement in achievements]
+
+@api_router.get("/achievements/{user_id}")
+async def get_user_achievements(user_id: str):
+    """Get user's unlocked achievements"""
+    user = await db.user_profiles.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(404, "User not found")
+    
+    achievement_ids = user.get("achievements", [])
+    achievements = await db.achievements.find({"id": {"$in": achievement_ids}}).to_list(1000)
+    return [Achievement(**achievement) for achievement in achievements]
+
+# Course endpoints
+@api_router.get("/courses")
+async def get_all_courses():
+    """Get all available courses"""
+    courses = await db.courses.find({"is_active": True}).to_list(1000)
+    return [Course(**course) for course in courses]
+
+@api_router.get("/courses/{user_id}/available")
+async def get_available_courses(user_id: str):
+    """Get courses available to user based on prerequisites"""
+    user = await db.user_profiles.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(404, "User not found")
+    
+    # Get completed courses
+    completed_course_ids = await db.course_completions.find({"user_id": user_id}).distinct("course_id")
+    completed_courses = await db.courses.find({"id": {"$in": completed_course_ids}}).to_list(1000)
+    completed_course_names = [course["name"].lower().replace(" ", "-") for course in completed_courses]
+    
+    # Get all courses
+    all_courses = await db.courses.find({"is_active": True}).to_list(1000)
+    
+    available_courses = []
+    for course in all_courses:
+        # Check if prerequisites are met
+        prerequisites_met = all(prereq in completed_course_names for prereq in course.get("prerequisites", []))
+        if prerequisites_met:
+            available_courses.append(Course(**course))
+    
+    return available_courses
+
+@api_router.post("/courses/{course_id}/complete")
+async def complete_course(course_id: str, user_id: str):
+    """Mark a course as completed and award Zen Coins"""
+    course = await db.courses.find_one({"id": course_id})
+    if not course:
+        raise HTTPException(404, "Course not found")
+    
+    # Check if already completed
+    existing_completion = await db.course_completions.find_one({"user_id": user_id, "course_id": course_id})
+    if existing_completion:
+        raise HTTPException(400, "Course already completed")
+    
+    # Create completion record
+    completion = CourseCompletion(
+        user_id=user_id,
+        course_id=course_id,
+        zen_coins_earned=course["zen_coin_reward"]
+    )
+    await db.course_completions.insert_one(completion.dict())
+    
+    # Award Zen Coins
+    await award_zen_coins(
+        user_id,
+        course["zen_coin_reward"],
+        AchievementType.COURSE_COMPLETION,
+        f"Course completed: {course['name']}",
+        {"course_id": course_id}
+    )
+    
+    # Check for achievements
+    await check_and_award_achievements(user_id)
+    
+    return completion
+
+# Mood Diary endpoints
+@api_router.post("/mood-diary", response_model=MoodDiaryEntry)
+async def create_mood_diary_entry(entry_data: MoodDiaryCreate):
+    """Create a mood diary entry and award Zen Coins"""
+    entry = MoodDiaryEntry(**entry_data.dict())
+    await db.mood_diary_entries.insert_one(entry.dict())
+    
+    # Award Zen Coins
+    await award_zen_coins(
+        entry.user_id,
+        5,
+        AchievementType.MOOD_DIARY,
+        f"Mood reflection: {entry.mood.value}",
+        {"mood_entry_id": entry.id}
+    )
+    
+    # Check for achievements
+    await check_and_award_achievements(entry.user_id)
+    
+    return entry
+
+@api_router.get("/mood-diary/{user_id}")
+async def get_user_mood_diary(user_id: str, limit: int = 50):
+    """Get user's mood diary entries"""
+    entries = await db.mood_diary_entries.find({"user_id": user_id}).sort("created_at", -1).limit(limit).to_list(limit)
+    return [MoodDiaryEntry(**entry) for entry in entries]
+
+# Leaderboard endpoint
+@api_router.get("/leaderboard")
+async def get_zen_coin_leaderboard(limit: int = 10):
+    """Get Zen Coin leaderboard"""
+    users = await db.user_profiles.find().sort("zen_coins", -1).limit(limit).to_list(limit)
+    leaderboard = []
+    for i, user in enumerate(users, 1):
+        leaderboard.append({
+            "rank": i,
+            "username": user["username"],
+            "zen_coins": user["zen_coins"],
+            "total_sessions": user.get("total_sessions", 0),
+            "consecutive_days": user.get("consecutive_days", 0)
+        })
+    return leaderboard
 
 # Include the router in the main app
 app.include_router(api_router)
