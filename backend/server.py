@@ -206,6 +206,277 @@ DONATION_PACKAGES = {
     "custom": {"min_amount": 1.0, "max_amount": 500.0}
 }
 
+# Default Achievements
+DEFAULT_ACHIEVEMENTS = [
+    {
+        "name": "First Steps",
+        "description": "Complete your first breathing session",
+        "achievement_type": AchievementType.DAILY_PRACTICE,
+        "zen_coin_reward": 10,
+        "requirements": {"sessions": 1},
+        "is_repeatable": False,
+        "icon": "🌱"
+    },
+    {
+        "name": "Daily Zen",
+        "description": "Complete daily breathing practice",
+        "achievement_type": AchievementType.DAILY_PRACTICE,
+        "zen_coin_reward": 10,
+        "requirements": {"daily": True},
+        "is_repeatable": True,
+        "icon": "🧘"
+    },
+    {
+        "name": "Week Warrior",
+        "description": "Practice for 7 consecutive days",
+        "achievement_type": AchievementType.CONSECUTIVE_DAYS,
+        "zen_coin_reward": 50,
+        "requirements": {"consecutive_days": 7},
+        "is_repeatable": False,
+        "icon": "🔥"
+    },
+    {
+        "name": "Zen Master",
+        "description": "Practice for 30 consecutive days",
+        "achievement_type": AchievementType.CONSECUTIVE_DAYS,
+        "zen_coin_reward": 500,
+        "requirements": {"consecutive_days": 30},
+        "is_repeatable": False,
+        "icon": "🏆"
+    },
+    {
+        "name": "Course Graduate",
+        "description": "Complete a breathing course",
+        "achievement_type": AchievementType.COURSE_COMPLETION,
+        "zen_coin_reward": 30,
+        "requirements": {"courses": 1},
+        "is_repeatable": False,
+        "icon": "🎓"
+    },
+    {
+        "name": "Heart Reflector",
+        "description": "Submit your first mood diary entry",
+        "achievement_type": AchievementType.MOOD_DIARY,
+        "zen_coin_reward": 5,
+        "requirements": {"mood_entries": 1},
+        "is_repeatable": False,
+        "icon": "💝"
+    },
+    {
+        "name": "Community Builder",
+        "description": "Invite a friend to join",
+        "achievement_type": AchievementType.FRIEND_REFERRAL,
+        "zen_coin_reward": 50,
+        "requirements": {"referrals": 1},
+        "is_repeatable": True,
+        "icon": "🤝"
+    },
+    {
+        "name": "Zen Supporter",
+        "description": "Support the community with a subscription",
+        "achievement_type": AchievementType.PAID_SUBSCRIPTION,
+        "zen_coin_reward": 200,
+        "requirements": {"subscription": True},
+        "is_repeatable": False,
+        "icon": "💎"
+    }
+]
+
+# Default Courses
+DEFAULT_COURSES = [
+    {
+        "name": "Mindful Beginnings",
+        "description": "Introduction to conscious breathing",
+        "level": CourseLevel.BEGINNER,
+        "zen_coin_reward": 30,
+        "duration_minutes": 10,
+        "breathing_pattern": "just-breathe",
+        "prerequisites": []
+    },
+    {
+        "name": "Focus Foundation",
+        "description": "Build concentration through breath",
+        "level": CourseLevel.BEGINNER,
+        "zen_coin_reward": 35,
+        "duration_minutes": 15,
+        "breathing_pattern": "sharpen-focus",
+        "prerequisites": []
+    },
+    {
+        "name": "Calm Mastery",
+        "description": "Advanced techniques for inner peace",
+        "level": CourseLevel.INTERMEDIATE,
+        "zen_coin_reward": 60,
+        "duration_minutes": 20,
+        "breathing_pattern": "calm-before-event",
+        "prerequisites": ["mindful-beginnings"]
+    },
+    {
+        "name": "Deep Sleep Wisdom",
+        "description": "Master the art of restful preparation",
+        "level": CourseLevel.INTERMEDIATE,
+        "zen_coin_reward": 65,
+        "duration_minutes": 25,
+        "breathing_pattern": "drift-to-sleep",
+        "prerequisites": ["mindful-beginnings"]
+    },
+    {
+        "name": "Anxiety Transformation",
+        "description": "Transform worry into wisdom",
+        "level": CourseLevel.ADVANCED,
+        "zen_coin_reward": 85,
+        "duration_minutes": 30,
+        "breathing_pattern": "soothe-mind",
+        "prerequisites": ["calm-mastery", "focus-foundation"]
+    },
+    {
+        "name": "Zen Mastery",
+        "description": "The ultimate breathing mastery course",
+        "level": CourseLevel.MASTER,
+        "zen_coin_reward": 100,
+        "duration_minutes": 45,
+        "breathing_pattern": "just-breathe",
+        "prerequisites": ["anxiety-transformation", "deep-sleep-wisdom"]
+    }
+]
+
+# Utility functions for Zen Coin system
+async def calculate_consecutive_days(user_id: str) -> int:
+    """Calculate consecutive days of practice for a user"""
+    user = await db.user_profiles.find_one({"id": user_id})
+    if not user:
+        return 0
+    
+    if not user.get("last_practice_date"):
+        return 0
+    
+    # Get today's date
+    today = date.today()
+    last_practice = user["last_practice_date"]
+    
+    # If last practice was today, return current consecutive days
+    if last_practice == today:
+        return user.get("consecutive_days", 0)
+    
+    # If last practice was yesterday, we can continue the streak
+    if (today - last_practice).days == 1:
+        return user.get("consecutive_days", 0) + 1
+    
+    # If gap is more than 1 day, streak is broken
+    return 1 if last_practice == today else 1
+
+async def award_zen_coins(user_id: str, amount: int, transaction_type: AchievementType, description: str, metadata: Dict = None):
+    """Award Zen Coins to a user and create transaction record"""
+    if metadata is None:
+        metadata = {}
+    
+    # Update user's zen coin balance
+    await db.user_profiles.update_one(
+        {"id": user_id},
+        {
+            "$inc": {"zen_coins": amount},
+            "$set": {"updated_at": datetime.utcnow()}
+        }
+    )
+    
+    # Create transaction record
+    transaction = ZenCoinTransaction(
+        user_id=user_id,
+        amount=amount,
+        transaction_type=transaction_type,
+        description=description,
+        metadata=metadata
+    )
+    
+    await db.zen_coin_transactions.insert_one(transaction.dict())
+    return transaction
+
+async def check_and_award_achievements(user_id: str):
+    """Check if user has earned any new achievements"""
+    user = await db.user_profiles.find_one({"id": user_id})
+    if not user:
+        return []
+    
+    awarded_achievements = []
+    
+    # Get all achievements
+    achievements = await db.achievements.find().to_list(1000)
+    
+    for achievement in achievements:
+        achievement_id = achievement["id"]
+        
+        # Skip if already earned and not repeatable
+        if achievement_id in user.get("achievements", []) and not achievement.get("is_repeatable", False):
+            continue
+        
+        # Check achievement requirements
+        requirements = achievement.get("requirements", {})
+        earned = False
+        
+        if achievement["achievement_type"] == AchievementType.DAILY_PRACTICE:
+            if requirements.get("sessions") and user.get("total_sessions", 0) >= requirements["sessions"]:
+                earned = True
+            elif requirements.get("daily") and user.get("last_practice_date") == date.today():
+                earned = True
+                
+        elif achievement["achievement_type"] == AchievementType.CONSECUTIVE_DAYS:
+            if user.get("consecutive_days", 0) >= requirements.get("consecutive_days", 0):
+                earned = True
+                
+        elif achievement["achievement_type"] == AchievementType.COURSE_COMPLETION:
+            # Count completed courses
+            completed_courses = await db.course_completions.count_documents({"user_id": user_id})
+            if completed_courses >= requirements.get("courses", 0):
+                earned = True
+                
+        elif achievement["achievement_type"] == AchievementType.MOOD_DIARY:
+            # Count mood diary entries
+            mood_entries = await db.mood_diary_entries.count_documents({"user_id": user_id})
+            if mood_entries >= requirements.get("mood_entries", 0):
+                earned = True
+                
+        elif achievement["achievement_type"] == AchievementType.FRIEND_REFERRAL:
+            # Count referrals
+            referrals = await db.user_profiles.count_documents({"referred_by": user.get("referral_code")})
+            if referrals >= requirements.get("referrals", 0):
+                earned = True
+        
+        if earned:
+            # Award achievement
+            await db.user_profiles.update_one(
+                {"id": user_id},
+                {"$addToSet": {"achievements": achievement_id}}
+            )
+            
+            # Award Zen Coins
+            await award_zen_coins(
+                user_id,
+                achievement["zen_coin_reward"],
+                achievement["achievement_type"],
+                f"Achievement unlocked: {achievement['name']}",
+                {"achievement_id": achievement_id}
+            )
+            
+            awarded_achievements.append(achievement)
+    
+    return awarded_achievements
+
+async def initialize_default_data():
+    """Initialize default achievements and courses if they don't exist"""
+    # Check if achievements exist
+    achievement_count = await db.achievements.count_documents({})
+    if achievement_count == 0:
+        for achievement_data in DEFAULT_ACHIEVEMENTS:
+            achievement = Achievement(**achievement_data)
+            await db.achievements.insert_one(achievement.dict())
+    
+    # Check if courses exist
+    course_count = await db.courses.count_documents({})
+    if course_count == 0:
+        for course_data in DEFAULT_COURSES:
+            course = Course(**course_data)
+            await db.courses.insert_one(course.dict())
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
