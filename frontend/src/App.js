@@ -100,7 +100,117 @@ const INTENTION_MEDIA = {
   }
 };
 
-// Completion messages based on intention
+// Multi-language translations
+const TRANSLATIONS = {
+  zh: {
+    title: "心灵绿洲",
+    subtitle: "呼吸与绽放",
+    description: "您的呼吸创造您的个人绿洲。回到您通过每次会话成长的圣地。",
+    howHelp: "今天我们如何帮助您找到内心的平静？",
+    supportMission: "支持我们的神圣使命",
+    supportDescription: "帮助我们保持心灵绿洲无广告并持续改进，为世界上更多灵魂带来平静与安宁。",
+    supportWork: "支持我们的工作",
+    sessions: "会话",
+    elements: "生命元素",
+    intentions: {
+      'calm-before-event': { title: '重要时刻前的平静', subtitle: '演讲、面试或重要时刻' },
+      'sharpen-focus': { title: '提高专注力', subtitle: '工作、学习或创作任务' },
+      'soothe-mind': { title: '抚慰心灵', subtitle: '感到焦虑、沮丧或不知所措' },
+      'drift-to-sleep': { title: '安然入睡', subtitle: '为宁静的睡眠做准备' },
+      'just-breathe': { title: '简单呼吸', subtitle: '片刻的平静与平衡' }
+    },
+    breathing: {
+      inhale: '吸气',
+      hold: '保持憋气',
+      exhale: '呼气',
+      pressHold: '按住',
+      release: '放开',
+      keepHolding: '保持憋气',
+      cycle: '周期'
+    }
+  },
+  ja: {
+    title: "癒しの大地",
+    subtitle: "呼吸と花開き",
+    description: "あなたの呼吸があなただけのオアシスを創造します。セッションを重ねるごとに成長する聖地に戻りましょう。",
+    howHelp: "今日はどのように心の平静を見つけるお手伝いをしましょうか？",
+    supportMission: "私たちの神聖な使命を支援",
+    supportDescription: "癒しの大地を広告なしで保ち、継続的に改善し、世界中のより多くの魂に平静と安らぎをもたらすことを支援してください。",
+    supportWork: "私たちの活動を支援",
+    sessions: "セッション",
+    elements: "生命要素",
+    intentions: {
+      'calm-before-event': { title: '重要な瞬間前の落ち着き', subtitle: 'プレゼンテーション、面接、重要な瞬間' },
+      'sharpen-focus': { title: '集中力を高める', subtitle: '仕事、勉強、創造的なタスク' },
+      'soothe-mind': { title: '心を癒す', subtitle: '不安、落ち込み、圧倒された気持ち' },
+      'drift-to-sleep': { title: '安らかな眠りへ', subtitle: '安らかな眠りの準備' },
+      'just-breathe': { title: 'ただ呼吸する', subtitle: '平静とバランスのひととき' }
+    },
+    breathing: {
+      inhale: '吸息',
+      hold: '息止め',
+      exhale: '呼息',
+      pressHold: '押し続ける',
+      release: '離す',
+      keepHolding: '息止め続行',
+      cycle: 'サイクル'
+    }
+  },
+  ko: {
+    title: "회복의 땅",
+    subtitle: "호흡과 꽃피움",
+    description: "당신의 호흡이 개인적인 오아시스를 만듭니다. 각 세션을 통해 성장한 성역으로 돌아가세요.",
+    howHelp: "오늘 어떻게 마음의 평정을 찾도록 도와드릴까요？",
+    supportMission: "우리의 신성한 사명 지원",
+    supportDescription: "회복의 땅을 광고 없이 유지하고 지속적으로 개선하여 전 세계 더 많은 영혼에게 평화와 고요를 가져다주는 것을 도와주세요.",
+    supportWork: "우리의 작업 지원",
+    sessions: "세션",
+    elements: "생명 요소",
+    intentions: {
+      'calm-before-event': { title: '중요한 순간 전 평정', subtitle: '발표, 면접, 중요한 순간' },
+      'sharpen-focus': { title: '집중력 향상', subtitle: '업무, 학습, 창작 과제' },
+      'soothe-mind': { title: '마음 달래기', subtitle: '불안, 우울, 압도된 기분' },
+      'drift-to-sleep': { title: '잠들기', subtitle: '편안한 잠을 위한 준비' },
+      'just-breathe': { title: '단순히 호흡하기', subtitle: '평화와 균형의 순간' }
+    },
+    breathing: {
+      inhale: '들이쉬기',
+      hold: '숨 참기',
+      exhale: '내쉬기',
+      pressHold: '누르고 있기',
+      release: '놓기',
+      keepHolding: '계속 참기',
+      cycle: '주기'
+    }
+  },
+  en: {
+    title: "Restorative Lands",
+    subtitle: "Breathe & Bloom",
+    description: "Your breath creates your personal oasis. Return to the sanctuary you've grown with each mindful session.",
+    howHelp: "How may we guide your journey today?",
+    supportMission: "Support Our Sacred Mission",
+    supportDescription: "Help us keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.",
+    supportWork: "Support Our Work",
+    sessions: "sessions",
+    elements: "living elements",
+    intentions: {
+      'calm-before-event': { title: 'Calm Before an Event', subtitle: 'Presentation, interview, or important moment' },
+      'sharpen-focus': { title: 'Sharpen My Focus', subtitle: 'Work, study, or creative tasks' },
+      'soothe-mind': { title: 'Soothe My Mind', subtitle: 'Feeling anxious, down, or overwhelmed' },
+      'drift-to-sleep': { title: 'Drift to Sleep', subtitle: 'Preparing for restful slumber' },
+      'just-breathe': { title: 'Just Breathe', subtitle: 'A moment of peace and balance' }
+    },
+    breathing: {
+      inhale: 'Breathe In',
+      hold: 'Hold Breath',
+      exhale: 'Breathe Out',
+      pressHold: 'Press & Hold',
+      release: 'Release',
+      keepHolding: 'Keep Holding',
+      cycle: 'Cycle'
+    }
+  }
+};
 const COMPLETION_MESSAGES = {
   'calm-before-event': {
     english: "You've found your calm center; you're ready to step forward with confidence.",
