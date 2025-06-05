@@ -963,6 +963,20 @@ function App() {
   if (currentScreen === 'welcome') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center p-6 relative overflow-hidden">
+        {/* Language Selector */}
+        <div className="absolute top-6 right-6 z-20">
+          <select 
+            value={currentLanguage}
+            onChange={(e) => setCurrentLanguage(e.target.value)}
+            className="bg-black/20 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-white/40 transition-all duration-300"
+          >
+            <option value="en" className="bg-slate-800">English</option>
+            <option value="zh" className="bg-slate-800">中文</option>
+            <option value="ja" className="bg-slate-800">日本語</option>
+            <option value="ko" className="bg-slate-800">한국어</option>
+          </select>
+        </div>
+
         {/* Ambient background particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {Array.from({ length: 20 }, (_, i) => (
@@ -984,12 +998,12 @@ function App() {
           <div className="mb-16">
             <div className="mb-8">
               <h1 className="text-7xl font-extralight text-white mb-6 tracking-widest leading-tight">
-                Restorative Lands
+                {t.title}
               </h1>
               <div className="w-32 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto mb-6"></div>
-              <p className="text-2xl text-purple-200 mb-4 font-light tracking-wide">Breathe & Bloom</p>
+              <p className="text-2xl text-purple-200 mb-4 font-light tracking-wide">{t.subtitle}</p>
               <p className="text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed font-light">
-                Your breath creates your personal oasis. Return to the sanctuary you've grown with each mindful session.
+                {t.description}
               </p>
             </div>
             
@@ -999,7 +1013,7 @@ function App() {
                 <div className="flex items-center justify-center space-x-4">
                   <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
                   <p className="text-emerald-200 font-light text-lg">
-                    🌱 Your sanctuary flourishes with <span className="font-medium text-emerald-100">{oasisState.elements.length}</span> living elements from <span className="font-medium text-emerald-100">{oasisState.totalSessions}</span> sacred sessions
+                    🌱 Your sanctuary flourishes with <span className="font-medium text-emerald-100">{oasisState.elements.length}</span> {t.elements} from <span className="font-medium text-emerald-100">{oasisState.totalSessions}</span> sacred {t.sessions}
                   </p>
                   <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
                 </div>
@@ -1009,7 +1023,7 @@ function App() {
           
           {/* Intention selection with refined cards */}
           <div className="mb-16">
-            <h2 className="text-3xl font-light text-white mb-12 tracking-wide">How may we guide your journey today?</h2>
+            <h2 className="text-3xl font-light text-white mb-12 tracking-wide">{t.howHelp}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {intentions.map((intention) => (
                 <button
@@ -1025,8 +1039,8 @@ function App() {
                   
                   <div className="relative z-10">
                     <div className="text-5xl mb-6 filter drop-shadow-lg">{intention.icon}</div>
-                    <h3 className="text-xl font-medium mb-3 tracking-wide">{intention.title}</h3>
-                    <p className="text-sm opacity-90 font-light leading-relaxed">{intention.subtitle}</p>
+                    <h3 className="text-xl font-medium mb-3 tracking-wide">{t.intentions[intention.id].title}</h3>
+                    <p className="text-sm opacity-90 font-light leading-relaxed">{t.intentions[intention.id].subtitle}</p>
                   </div>
                   
                   {/* Subtle border accent */}
