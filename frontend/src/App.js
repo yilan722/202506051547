@@ -69,9 +69,9 @@ const ELEMENT_TYPES = {
 // Media sources for different intentions
 const INTENTION_MEDIA = {
   'calm-before-event': {
-    type: 'gif',
-    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif',
-    duration: 5, // Original GIF duration in seconds
+    type: 'video',
+    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197%20(1).mp4',
+    duration: 10, // Original video duration in seconds
     audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/black-box-cozy-forest-122347.mp3'
   },
   'sharpen-focus': {
@@ -81,21 +81,21 @@ const INTENTION_MEDIA = {
     audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/just-relax-11157.mp3'
   },
   'soothe-mind': {
-    type: 'gif',
-    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif',
-    duration: 5,
+    type: 'video',
+    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed1563560480.mp4',
+    duration: 10,
     audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/time-to-relax-11152.mp3'
   },
   'drift-to-sleep': {
-    type: 'gif',
-    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif',
-    duration: 5,
+    type: 'video',
+    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/Generated%20File%20June%2005%2C%202025%20-%2011_31AM.mp4',
+    duration: 10,
     audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/meditation-relax-sleep-music-346733.mp3'
   },
   'just-breathe': {
-    type: 'gif',
-    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif',
-    duration: 5,
+    type: 'video',
+    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/Generated%20File%20June%2005%2C%202025%20-%2011_31AM%20(1).mp4',
+    duration: 10,
     audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/buddha-healing-flute-music-calming-relaxing-music-for-body-souls-161796.mp3'
   }
 };
