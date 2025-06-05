@@ -136,50 +136,58 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown, selectedInten
   // Calculate total session duration
   const totalSessionTime = pattern.cycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.holdAfter);
   
-  // Calculate playback rate to match session duration
-  const playbackRate = media.duration / totalSessionTime;
-  const currentTime = (breathProgress / 100) * totalSessionTime;
+  // Calculate progressive playback rate (starts at 1.0, gradually slows down)
+  const getPlaybackRate = (progress) => {
+    // Start at normal speed (1.0), slow down to 0.3x as progress increases
+    return Math.max(0.3, 1.0 - (progress / 100) * 0.7);
+  };
+  
+  // Calculate current video time based on progress (no looping)
+  const getCurrentVideoTime = (progress) => {
+    const maxTime = media.duration - 0.1; // Leave small buffer to prevent end
+    return Math.min((progress / 100) * maxTime, maxTime);
+  };
 
   useEffect(() => {
-    if (media.type === 'video' && videoRef.current) {
-      // Set video playback rate and current time based on progress
-      videoRef.current.playbackRate = playbackRate;
-      videoRef.current.currentTime = currentTime;
+    if (videoRef.current && breathProgress >= 0) {
+      const video = videoRef.current;
+      const targetPlaybackRate = getPlaybackRate(breathProgress);
+      const targetCurrentTime = getCurrentVideoTime(breathProgress);
       
-      if (breathProgress > 0) {
-        videoRef.current.play().catch(console.log);
+      // Set playback rate for gradual slowdown
+      if (video.playbackRate !== targetPlaybackRate) {
+        video.playbackRate = targetPlaybackRate;
       }
+      
+      // Sync current time without looping
+      if (Math.abs(video.currentTime - targetCurrentTime) > 0.5) {
+        video.currentTime = targetCurrentTime;
+      }
+      
+      // Start playing if not already
+      if (video.paused && breathProgress > 0) {
+        video.play().catch(console.log);
+      }
+      
+      console.log(`Progress: ${breathProgress}%, Playback Rate: ${targetPlaybackRate.toFixed(2)}x, Time: ${targetCurrentTime.toFixed(1)}s`);
     }
-  }, [breathProgress, playbackRate, currentTime]);
+  }, [breathProgress, media.duration]);
 
   return (
     <div ref={canvasRef} className="oasis-canvas absolute inset-0 overflow-hidden">
-      {/* Dynamic background based on intention */}
-      {media.type === 'gif' ? (
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${media.url})`,
-            filter: `brightness(${0.7 + (breathProgress / 100) * 0.4}) contrast(${0.9 + (breathProgress / 100) * 0.3})`,
-            animationDuration: `${totalSessionTime}s`, // Match session duration
-            animationIterationCount: '1', // Play once, no loop
-            animationTimingFunction: 'linear',
-            animationFillMode: 'forwards'
-          }}
-        ></div>
-      ) : (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            filter: `brightness(${0.7 + (breathProgress / 100) * 0.4}) contrast(${0.9 + (breathProgress / 100) * 0.3})`
-          }}
-          muted
-          playsInline
-        >
-          <source src={media.url} type="video/mp4" />
-        </video>
-      )}
+      {/* All intentions now use video */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          filter: `brightness(${0.7 + (breathProgress / 100) * 0.4}) contrast(${0.9 + (breathProgress / 100) * 0.3})`
+        }}
+        muted
+        playsInline
+        preload="metadata"
+      >
+        <source src={media.url} type="video/mp4" />
+      </video>
       
       {/* Subtle overlay for text readability */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
