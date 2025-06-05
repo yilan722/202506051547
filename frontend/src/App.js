@@ -312,6 +312,7 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown, selectedInten
 function App() {
   const [currentScreen, setCurrentScreen] = useState('welcome');
   const [selectedIntention, setSelectedIntention] = useState(null);
+  const [currentLanguage, setCurrentLanguage] = useState('en'); // Default to English
   const [breathingSession, setBreathingSession] = useState({
     isActive: false,
     currentCycle: 0,
@@ -329,6 +330,9 @@ function App() {
   const intervalRef = useRef(null);
   const audioRef = useRef(null);
   const breathButtonRef = useRef(false); // Add ref for real-time button state
+
+  // Get current translations
+  const t = TRANSLATIONS[currentLanguage];
 
   // Initialize audio context on user interaction
   const initializeAudio = async () => {
