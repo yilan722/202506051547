@@ -204,7 +204,10 @@ const TRANSLATIONS = {
     supportDescription: "Help us keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.",
     supportWork: "Support Our Work",
     sessions: "sessions",
-    elements: "living elements",
+    elements: "Zen Coins",
+    zenCoins: "Zen Coins",
+    totalZenCoins: "Total Zen Coins",
+    earnedCoins: "earned",
     intentions: {
       'calm-before-event': { title: 'Calm Before an Event', subtitle: 'Presentation, interview, or important moment' },
       'sharpen-focus': { title: 'Sharpen My Focus', subtitle: 'Work, study, or creative tasks' },
