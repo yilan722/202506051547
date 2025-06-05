@@ -1247,88 +1247,498 @@ function App() {
     );
   }
 
+  // Render different screens based on currentScreen state
+  const renderScreen = () => {
+    if (currentScreen === 'welcome') {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Language Selector */}
+          <div className="absolute top-6 right-6 z-20">
+            <select 
+              value={currentLanguage}
+              onChange={(e) => setCurrentLanguage(e.target.value)}
+              className="bg-black/20 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-white/40 transition-all duration-300"
+            >
+              <option value="en" className="bg-slate-800">English</option>
+              <option value="zh" className="bg-slate-800">中文</option>
+              <option value="ja" className="bg-slate-800">日本語</option>
+              <option value="ko" className="bg-slate-800">한국어</option>
+            </select>
+          </div>
+
+          {/* Zen Coin Display */}
+          {userProfile && (
+            <div className="absolute top-6 left-6 z-20">
+              <button
+                onClick={() => setShowZenCoinMenu(true)}
+                className="bg-black/20 backdrop-blur-sm border border-yellow-400/30 rounded-xl px-4 py-2 hover:bg-black/30 transition-all duration-300"
+              >
+                <ZenCoinDisplay zenCoins={userProfile.zen_coins} className="text-sm" />
+              </button>
+            </div>
+          )}
+
+          {/* Ambient background particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {Array.from({ length: 20 }, (_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-1 bg-white rounded-full opacity-20 animate-twinkle"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 10}s`,
+                  animationDuration: `${4 + Math.random() * 6}s`
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="max-w-5xl w-full text-center relative z-10">
+            {/* Header with elegant styling */}
+            <div className="mb-16">
+              <div className="mb-8">
+                <h1 className="text-7xl font-extralight text-white mb-6 tracking-widest leading-tight">
+                  {t.title}
+                </h1>
+                <div className="w-32 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto mb-6"></div>
+                <p className="text-2xl text-purple-200 mb-4 font-light tracking-wide">{t.subtitle}</p>
+                <p className="text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed font-light">
+                  {t.description}
+                </p>
+              </div>
+              
+              {/* Progress indicator with elegant styling */}
+              {oasisState.totalSessions > 0 && (
+                <div className="mt-8 p-6 bg-gradient-to-r from-emerald-900/30 via-teal-900/30 to-cyan-900/30 rounded-3xl backdrop-blur-xl border border-emerald-700/20 inline-block shadow-2xl">
+                  <div className="flex items-center justify-center space-x-4">
+                    <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <p className="text-emerald-200 font-light text-lg">
+                      🌱 Your sanctuary flourishes with <span className="font-medium text-emerald-100">{oasisState.elements.length}</span> {t.elements} from <span className="font-medium text-emerald-100">{oasisState.totalSessions}</span> sacred {t.sessions}
+                    </p>
+                    <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* Intention selection with refined cards */}
+            <div className="mb-16">
+              <h2 className="text-3xl font-light text-white mb-12 tracking-wide">{t.howHelp}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {intentions.map((intention) => (
+                  <button
+                    key={intention.id}
+                    onClick={() => {
+                      setSelectedIntention(intention.id);
+                      setCurrentScreen('preparation');
+                    }}
+                    className={`group relative p-8 rounded-3xl bg-gradient-to-br ${intention.gradient} hover:scale-105 transform transition-all duration-500 text-white shadow-2xl hover:shadow-3xl overflow-hidden`}
+                  >
+                    {/* Card glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <div className="relative z-10">
+                      <div className="text-5xl mb-6 filter drop-shadow-lg">{intention.icon}</div>
+                      <h3 className="text-xl font-medium mb-3 tracking-wide">{t.intentions[intention.id].title}</h3>
+                      <p className="text-sm opacity-90 font-light leading-relaxed">{t.intentions[intention.id].subtitle}</p>
+                    </div>
+                    
+                    {/* Subtle border accent */}
+                    <div className="absolute inset-0 rounded-3xl border border-white/20 group-hover:border-white/40 transition-colors duration-500"></div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Support section with elegant button */}
+            <div className="mt-16 pt-8 border-t border-slate-700/30">
+              <div className="flex flex-col items-center space-y-8">
+                <h3 className="text-xl font-light text-slate-300 tracking-wide">{t.supportMission}</h3>
+                <p className="text-sm text-slate-400 max-w-2xl text-center leading-relaxed font-light">
+                  {t.supportDescription}
+                </p>
+                
+                {/* Support section with donation button only */}
+                <div className="flex justify-center w-full max-w-md mx-auto">
+                  {/* Real Payment Button */}
+                  <button 
+                    onClick={() => {
+                      // Open payment instruction dialog
+                      const confirmed = window.confirm("💖 Support Restorative Lands Development\n\n🌱 Real Payment Options:\n\n1. PayPal: yilan722@example.com\n2. Venmo: @yilan722\n3. CashApp: $yilan722\n4. Crypto: BTC/ETH/USDT supported\n\nOr choose 'OK' to see integration guide for developers.\n\nCancel to return to meditation.");
+                      
+                      if (confirmed) {
+                        // Show developer payment integration guide
+                        const devGuide = `🚀 DEVELOPER PAYMENT INTEGRATION GUIDE\n\n💳 Option 1: Stripe Integration\n• Sign up at stripe.com\n• Get API keys (publishable + secret)\n• Install: npm install @stripe/stripe-js\n• Add to .env: REACT_APP_STRIPE_PUBLISHABLE_KEY\n• Backend: Add Stripe webhook endpoint\n\n💰 Option 2: PayPal Integration\n• Sign up at developer.paypal.com\n• Get Client ID and Secret\n• Install: npm install @paypal/react-paypal-js\n• Create PayPal Button component\n\n🏦 Option 3: Square Integration\n• Sign up at developer.squareup.com\n• Get Application ID\n• Install: npm install squareup\n• Implement Square Payment Form\n\n⚡ Quick Demo Implementation:\n1. Replace onClick handler\n2. Add payment provider SDK\n3. Configure webhook endpoints\n4. Handle success/failure states\n\n🔧 Need help? Contact: yilan722@email.com\n\nFor now, use manual payment methods above! 💝`;
+                        
+                        alert(devGuide);
+                        
+                        // Optional: Open PayPal direct link
+                        if (window.confirm("Open PayPal payment link?")) {
+                          window.open("https://www.paypal.me/yilan722/15", "_blank");
+                        }
+                      }
+                    }}
+                    className="w-full px-8 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20"
+                  >
+                    <div className="flex items-center justify-center space-x-3">
+                      <span className="text-lg">💖</span>
+                      <span className="font-light tracking-wide">{t.supportWork}</span>
+                      <div className="w-2 h-2 bg-rose-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                    </div>
+                    
+                    {/* Button hover effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </button>
+                </div>
+                
+                <p className="text-xs text-slate-500 font-light italic text-center">
+                  Your support helps cover development and server costs • Share your garden to inspire others on their mindfulness journey
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (currentScreen === 'preparation') {
+      const pattern = BREATHING_PATTERNS[selectedIntention];
+      const intention = intentions.find(i => i.id === selectedIntention);
+      
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Ambient particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {Array.from({ length: 15 }, (_, i) => (
+              <div
+                key={i}
+                className="absolute w-px h-px bg-purple-200 rounded-full opacity-30 animate-twinkle"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 8}s`,
+                  animationDuration: `${3 + Math.random() * 4}s`
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="max-w-3xl w-full text-center relative z-10">
+            {/* Header section */}
+            <div className="mb-12">
+              <div className="text-7xl mb-8 filter drop-shadow-2xl">{intention.icon}</div>
+              <h2 className="text-5xl font-extralight text-white mb-6 tracking-wider leading-tight">{intention.title}</h2>
+              <div className="w-24 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto mb-6"></div>
+              <p className="text-xl text-purple-200 mb-12 font-light leading-relaxed">{pattern.description}</p>
+            </div>
+
+            {/* Breathing pattern card with elegant design */}
+            <div className="bg-gradient-to-br from-white/5 via-white/10 to-white/5 backdrop-blur-2xl rounded-3xl p-10 mb-12 border border-white/10 shadow-2xl">
+              <h3 className="text-3xl font-light text-white mb-8 tracking-wide">{pattern.name}</h3>
+              
+              {/* Breathing pattern grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center mb-8">
+                <div className="group">
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-400/20 to-blue-600/30 border border-blue-400/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                    <div className="text-3xl text-blue-300 font-light">{pattern.inhale}s</div>
+                  </div>
+                  <div className="text-blue-200 font-light tracking-wide">Inhale</div>
+                </div>
+                
+                {pattern.hold > 0 && (
+                  <div className="group">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-400/20 to-green-600/30 border border-green-400/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                      <div className="text-3xl text-green-300 font-light">{pattern.hold}s</div>
+                    </div>
+                    <div className="text-green-200 font-light tracking-wide">Hold</div>
+                  </div>
+                )}
+                
+                <div className="group">
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-400/20 to-purple-600/30 border border-purple-400/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                    <div className="text-3xl text-purple-300 font-light">{pattern.exhale}s</div>
+                  </div>
+                  <div className="text-purple-200 font-light tracking-wide">Exhale</div>
+                </div>
+                
+                {pattern.holdAfter > 0 && (
+                  <div className="group">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-400/20 to-indigo-600/30 border border-indigo-400/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                      <div className="text-3xl text-indigo-300 font-light">{pattern.holdAfter}s</div>
+                    </div>
+                    <div className="text-indigo-200 font-light tracking-wide">Hold</div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Session details */}
+              <div className="pt-8 border-t border-white/10">
+                <div className="flex items-center justify-center space-x-8 text-slate-300">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                    <span className="font-light">{pattern.cycles} breath cycles</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span className="font-light">Each breath grows your oasis</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="space-y-6">
+              <button
+                onClick={startBreathingSession}
+                className={`group relative w-full py-6 px-10 rounded-3xl bg-gradient-to-r ${pattern.color} text-white text-2xl font-light hover:scale-105 transform transition-all duration-500 shadow-2xl overflow-hidden tracking-wide`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative z-10 flex items-center justify-center space-x-4">
+                  <span>{oasisState.totalSessions > 0 ? 'Return to Your Oasis' : 'Begin Your Journey'}</span>
+                  <div className="w-3 h-3 bg-white/60 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-500"></div>
+                </div>
+              </button>
+              
+              <button
+                onClick={() => setCurrentScreen('welcome')}
+                className="w-full py-4 px-8 rounded-2xl bg-white/5 backdrop-blur-sm text-white border border-white/20 hover:bg-white/10 transition-all duration-300 font-light tracking-wide"
+              >
+                Choose Different Intention
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (currentScreen === 'breathing') {
+      const pattern = BREATHING_PATTERNS[selectedIntention];
+      const intention = intentions.find(i => i.id === selectedIntention);
+      
+      return (
+        <div className="min-h-screen relative flex items-center justify-center p-4">
+          {/* Living Oasis Canvas */}
+          <OasisCanvas 
+            oasisState={oasisState}
+            breathProgress={breathingSession.progress}
+            onElementGrown={handleElementGrown}
+            selectedIntention={selectedIntention}
+          />
+          
+          {/* Progress Bar */}
+          <div className="absolute top-0 left-0 w-full h-2 bg-black bg-opacity-30 z-10">
+            <div 
+              className={`h-full bg-gradient-to-r ${pattern.color} transition-all duration-300`}
+              style={{ width: `${breathingSession.progress}%` }}
+            />
+          </div>
+
+          <div className="text-center z-20">
+            {/* Unified Breathing Guide Circle with Interaction */}
+            <div className="mb-16">
+              <div className="relative">
+                {/* Outer ring effect */}
+                <div className={`absolute inset-0 w-48 h-48 mx-auto rounded-full border-2 border-white/20 transition-all duration-1000 ${getBreathingGuideSize()} opacity-50`}></div>
+                
+                {/* Main breathing guide - now interactive */}
+                <button
+                  onMouseDown={handleBreathButtonPress}
+                  onMouseUp={handleBreathButtonRelease}
+                  onTouchStart={handleBreathButtonPress}
+                  onTouchEnd={handleBreathButtonRelease}
+                  className={`breath-button-unified relative w-44 h-44 mx-auto rounded-full bg-gradient-to-br ${pattern.color} backdrop-blur-sm transform transition-all duration-1000 ease-in-out ${getBreathingGuideSize()} overflow-hidden shadow-2xl ${
+                    isBreathButtonPressed ? 'shadow-3xl scale-105' : ''
+                  } border-4 border-white/40`}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent"></div>
+                  
+                  {/* Center content */}
+                  <div className="w-full h-full flex flex-col items-center justify-center relative z-10 text-white">
+                    <div className="text-3xl font-light drop-shadow-lg mb-2">
+                      {Math.ceil(breathingSession.timeRemaining)}
+                    </div>
+                    <div className="text-sm opacity-80 font-light">
+                      {getBreathingInstruction()}
+                    </div>
+                  </div>
+                  
+                  {/* Inner pulse effect */}
+                  <div className="absolute inset-6 rounded-full bg-white/10 animate-pulse"></div>
+                  
+                  {/* Ripple effect when pressed */}
+                  <div className={`absolute inset-0 rounded-full bg-white/20 transition-all duration-300 ${
+                    isBreathButtonPressed ? 'scale-150 opacity-0' : 'scale-100 opacity-0'
+                  }`}></div>
+                </button>
+              </div>
+              
+              {/* Progress ring around the button */}
+              <div className="relative -mt-44 mx-auto w-44 h-44 pointer-events-none">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    stroke="rgba(255,255,255,0.1)"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    stroke="rgba(255,255,255,0.6)"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeDasharray={`${2 * Math.PI * 45}`}
+                    strokeDashoffset={`${2 * Math.PI * 45 * (1 - breathingSession.progress / 100)}`}
+                    className="transition-all duration-300"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Refined Instructions */}
+            <div className="mb-12">
+              <h2 className="text-5xl font-extralight text-white mb-3 drop-shadow-2xl tracking-wide">
+                {getPhaseInstruction()}
+              </h2>
+              <p className="text-xl text-white/80 drop-shadow-lg font-light">
+                Cycle {breathingSession.currentCycle + 1} of {pattern.cycles}
+              </p>
+              
+              {/* Action guidance */}
+              <div className="mt-6 p-4 bg-black/20 backdrop-blur-sm rounded-2xl max-w-md mx-auto">
+                <p className="text-white/90 text-sm font-light">
+                  {getActionGuidance()}
+                </p>
+              </div>
+            </div>
+
+            {/* Elegant Pattern Info */}
+            <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-8 max-w-md mx-auto border border-white/10 shadow-2xl">
+              <div className="flex items-center justify-center mb-4">
+                <span className="text-3xl mr-3 filter drop-shadow-lg">{intention.icon}</span>
+                <div className="text-white text-xl font-light tracking-wide">{pattern.name}</div>
+              </div>
+              <div className="text-white/80 font-light text-center leading-relaxed">
+                Your breath controls the flow of time
+              </div>
+              
+              {/* Progress indicator */}
+              <div className="mt-6 pt-4 border-t border-white/10">
+                <div className="flex items-center justify-center space-x-3">
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                  <span className="text-emerald-200 text-sm font-light">
+                    {Math.round(breathingSession.progress)}% Complete
+                  </span>
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Audio Control Button */}
+            <button
+              onClick={() => {
+                if (backgroundAudio) {
+                  stopAmbientSound();
+                } else {
+                  startAmbientSound();
+                }
+              }}
+              className="absolute top-8 left-8 w-14 h-14 rounded-full bg-black/20 backdrop-blur-sm text-white/80 hover:text-white hover:bg-black/40 transition-all duration-300 flex items-center justify-center z-30 border border-white/10 text-xl"
+            >
+              {backgroundAudio ? '🔇' : '🎵'}
+            </button>
+
+            {/* Refined Exit Button */}
+            <button
+              onClick={resetApp}
+              className="absolute top-8 right-8 w-14 h-14 rounded-full bg-black/20 backdrop-blur-sm text-white/80 hover:text-white hover:bg-black/40 transition-all duration-300 flex items-center justify-center z-30 border border-white/10"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      );
+    } else if (currentScreen === 'completion') {
+      const message = COMPLETION_MESSAGES[selectedIntention];
+      const intention = intentions.find(i => i.id === selectedIntention);
+      
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Ambient particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {Array.from({ length: 30 }, (_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-1 bg-yellow-200 rounded-full opacity-30 animate-float"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 10}s`,
+                  animationDuration: `${5 + Math.random() * 10}s`
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="max-w-3xl w-full text-center relative z-10">
+            {/* Completion message */}
+            <div className="mb-16">
+              <div className="text-8xl mb-10 filter drop-shadow-2xl">{message.icon}</div>
+              <h2 className="text-5xl font-extralight text-white mb-8 tracking-wider leading-tight">
+                Practice Complete
+              </h2>
+              <div className="w-32 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto mb-8"></div>
+              <p className="text-2xl text-purple-200 mb-6 font-light leading-relaxed">
+                {message.english}
+              </p>
+              
+              {/* Zen Coins earned notification */}
+              <div className="mt-12 p-6 bg-gradient-to-r from-yellow-500/20 via-amber-500/20 to-orange-500/20 rounded-3xl backdrop-blur-xl border border-yellow-500/30 inline-block shadow-2xl">
+                <div className="flex items-center justify-center space-x-4">
+                  <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+                  <p className="text-yellow-200 font-light text-lg">
+                    <span className="text-2xl">🪙</span> <span className="font-medium text-yellow-100">+10 Zen Coins</span> earned for completing your practice
+                  </p>
+                  <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Action buttons */}
+            <div className="space-y-6">
+              <button
+                onClick={() => setCurrentScreen('welcome')}
+                className="group relative w-full py-6 px-10 rounded-3xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-2xl font-light hover:scale-105 transform transition-all duration-500 shadow-2xl overflow-hidden tracking-wide"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative z-10 flex items-center justify-center space-x-4">
+                  <span>Return to Sanctuary</span>
+                  <div className="w-3 h-3 bg-white/60 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-500"></div>
+                </div>
+              </button>
+              
+              <button
+                onClick={() => {
+                  setCurrentScreen('preparation');
+                }}
+                className="w-full py-4 px-8 rounded-2xl bg-white/5 backdrop-blur-sm text-white border border-white/20 hover:bg-white/10 transition-all duration-300 font-light tracking-wide"
+              >
+                Practice Again
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Default return if no screen matches (should never happen)
+    return null;
+  };
+
   return (
     <>
       {/* Main App Content */}
-      {currentScreen === 'welcome' && renderWelcomeScreen()}
-      {currentScreen === 'preparation' && renderPreparationScreen()}
-      {currentScreen === 'breathing' && renderBreathingScreen()}
-      {currentScreen === 'completion' && renderCompletionScreen()}
-
-      {/* Zen Coin System Modals */}
-      {achievementNotification && (
-        <AchievementNotification
-          achievement={achievementNotification}
-          onClose={() => setAchievementNotification(null)}
-        />
-      )}
-
-      {showZenCoinMenu && (
-        <ZenCoinMenu
-          userProfile={userProfile}
-          onMoodDiary={() => {
-            setShowZenCoinMenu(false);
-            setShowMoodDiary(true);
-          }}
-          onCourses={() => {
-            setShowZenCoinMenu(false);
-            setShowCourses(true);
-          }}
-          onAchievements={() => {
-            setShowZenCoinMenu(false);
-            setShowAchievements(true);
-          }}
-          onLeaderboard={() => {
-            setShowZenCoinMenu(false);
-            setShowLeaderboard(true);
-          }}
-          onClose={() => setShowZenCoinMenu(false)}
-        />
-      )}
-
-      {showMoodDiary && (
-        <MoodDiary
-          userProfile={userProfile}
-          onMoodSubmit={submitMoodDiary}
-          onClose={() => setShowMoodDiary(false)}
-        />
-      )}
-
-      {showCourses && (
-        <CoursesModal
-          userProfile={userProfile}
-          courses={courses}
-          onCourseComplete={completeCourse}
-          onClose={() => setShowCourses(false)}
-        />
-      )}
-
-      {showAchievements && (
-        <AchievementGallery
-          userProfile={userProfile}
-          allAchievements={achievements}
-          userAchievements={userAchievements}
-          onClose={() => setShowAchievements(false)}
-        />
-      )}
-
-      {showLeaderboard && (
-        <Leaderboard
-          leaderboard={leaderboard}
-          userProfile={userProfile}
-          onClose={() => setShowLeaderboard(false)}
-        />
-      )}
-    </>
-  );
-
-  return (
-    <>
-      {/* Main App Content */}
-      {currentScreen === 'welcome' && renderWelcomeScreen()}
-      {currentScreen === 'preparation' && renderPreparationScreen()}
-      {currentScreen === 'breathing' && renderBreathingScreen()}
-      {currentScreen === 'completion' && renderCompletionScreen()}
+      {renderScreen()}
 
       {/* Zen Coin System Modals */}
       {achievementNotification && (
