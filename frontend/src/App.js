@@ -1050,12 +1050,12 @@ function App() {
             </div>
           </div>
 
-          {/* Support and Share section with elegant buttons */}
+          {/* Support section with elegant button */}
           <div className="mt-16 pt-8 border-t border-slate-700/30">
             <div className="flex flex-col items-center space-y-8">
-              <h3 className="text-xl font-light text-slate-300 tracking-wide">Support Our Sacred Mission</h3>
+              <h3 className="text-xl font-light text-slate-300 tracking-wide">{t.supportMission}</h3>
               <p className="text-sm text-slate-400 max-w-2xl text-center leading-relaxed font-light">
-                Help us keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.
+                {t.supportDescription}
               </p>
               
               {/* Support section with donation button only */}
@@ -1082,7 +1082,7 @@ function App() {
                 >
                   <div className="flex items-center justify-center space-x-3">
                     <span className="text-lg">💖</span>
-                    <span className="font-light tracking-wide">Support Our Work</span>
+                    <span className="font-light tracking-wide">{t.supportWork}</span>
                     <div className="w-2 h-2 bg-rose-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
                   </div>
                   
