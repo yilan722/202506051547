@@ -914,8 +914,8 @@ function App() {
                 Help us keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.
               </p>
               
-              {/* Button row */}
-              <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg">
+              {/* Support section with donation button only */}
+              <div className="flex justify-center w-full max-w-md mx-auto">
                 {/* Real Payment Button */}
                 <button 
                   onClick={() => {
@@ -934,7 +934,7 @@ function App() {
                       }
                     }
                   }}
-                  className="group flex-1 relative px-6 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20"
+                  className="w-full px-8 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20"
                 >
                   <div className="flex items-center justify-center space-x-3">
                     <span className="text-lg">💖</span>
@@ -944,76 +944,6 @@ function App() {
                   
                   {/* Button hover effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </button>
-
-                {/* GitHub Share Button */}
-                <button 
-                  onClick={() => {
-                    const confirmed = window.confirm("🌱 Share Your Garden on GitHub! 🌱\n\nThis will provide you with instructions to:\n• Create a GitHub repository\n• Upload your Restorative Lands app\n• Share it with the world\n\nReady to proceed?");
-                    if (confirmed) {
-                      const instructions = `🌟 Upload Your Restorative Lands to GitHub 🌟
-
-📋 STEP-BY-STEP INSTRUCTIONS:
-
-1️⃣ CREATE GITHUB REPOSITORY:
-   • Go to github.com and sign in
-   • Click "New repository" (green button)
-   • Name: "restorative-lands-breathe-bloom"
-   • Description: "A serene meditation app where breath creates digital gardens"
-   • Make it Public ✅
-   • Click "Create repository"
-
-2️⃣ PREPARE YOUR CODE:
-   • Download all files from your current app
-   • Create local folder: "restorative-lands"
-   • Copy frontend/ and backend/ folders
-
-3️⃣ UPLOAD TO GITHUB:
-   Option A - Upload via Web:
-   • Click "uploading an existing file"
-   • Drag all your files/folders
-   • Commit with message: "Initial commit - Restorative Lands meditation app"
-   
-   Option B - Use Git Commands:
-   git init
-   git add .
-   git commit -m "Initial commit - Restorative Lands meditation app"
-   git remote add origin [your-repo-url]
-   git push -u origin main
-
-4️⃣ ENHANCE YOUR REPOSITORY:
-   • Add README.md with app description
-   • Include screenshots of your beautiful UI
-   • Add installation instructions
-   • Tag it: #meditation #wellness #breathing #react
-
-5️⃣ SHARE YOUR CREATION:
-   • Copy repository URL
-   • Share on social media with #RestorativeLands
-   • Submit to meditation app communities
-   • Let others find peace in your digital garden! 🌸
-
-🎉 Your peaceful oasis will now live forever on GitHub!
-
-Would you like me to open GitHub in a new tab?`;
-                      
-                      alert(instructions);
-                      
-                      if (window.confirm("Open GitHub in a new tab to get started?")) {
-                        window.open("https://github.com/new", "_blank");
-                      }
-                    }
-                  }}
-                  className="group flex-1 relative px-6 py-4 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 border border-emerald-400/30 rounded-2xl text-emerald-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-emerald-500/20"
-                >
-                  <div className="flex items-center justify-center space-x-3">
-                    <span className="text-lg">🌱</span>
-                    <span className="font-light tracking-wide">Share on GitHub</span>
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                  </div>
-                  
-                  {/* Button hover effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </button>
               </div>
               
