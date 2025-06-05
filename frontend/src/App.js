@@ -290,30 +290,7 @@ function App() {
     }
   };
 
-  // Start intention-specific background audio
-  const startAmbientSound = () => {
-    console.log('Starting ambient sound for intention:', selectedIntention);
-    if (backgroundAudio) {
-      backgroundAudio.pause();
-      backgroundAudio.currentTime = 0;
-    }
-    
-    const intentionAudio = createIntentionAudio(selectedIntention);
-    if (intentionAudio) {
-      intentionAudio.play().catch(console.log);
-      setBackgroundAudio(intentionAudio);
-      console.log('Intention audio started successfully');
-    } else {
-      console.log('Failed to create intention audio, using fallback');
-      // Fallback to synthesized audio if file audio fails
-      if (audioContext && audioContext.state === 'running') {
-        const ambient = createSynthesizedAmbientSound();
-        setBackgroundAudio(ambient);
-      }
-    }
-  };
-
-  // Fallback synthesized ambient sound (original Om-based music)
+  // Create synthesized ambient sound (original Om-based music)
   const createSynthesizedAmbientSound = () => {
     if (!audioContext) return null;
     
