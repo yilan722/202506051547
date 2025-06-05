@@ -1409,6 +1409,18 @@ function App() {
           </select>
         </div>
 
+        {/* Zen Coin Display */}
+        {userProfile && (
+          <div className="absolute top-6 left-6 z-20">
+            <button
+              onClick={() => setShowZenCoinMenu(true)}
+              className="bg-black/20 backdrop-blur-sm border border-yellow-400/30 rounded-xl px-4 py-2 hover:bg-black/30 transition-all duration-300"
+            >
+              <ZenCoinDisplay zenCoins={userProfile.zen_coins} className="text-sm" />
+            </button>
+          </div>
+        )}
+
         {/* Ambient background particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {Array.from({ length: 20 }, (_, i) => (
