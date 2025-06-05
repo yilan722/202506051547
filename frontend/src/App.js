@@ -869,7 +869,7 @@ function App() {
           return `⏸️ ${t.breathing.pressHold} to start inhaling and advance time`;
         case 'hold':
         case 'holdAfter':
-          return `⏸️ ${t.breathing.keepHolding} to continue`;
+          return `✅ ${t.breathing.hold} - time progresses automatically`;
         case 'exhale':
           return `⏸️ ${t.breathing.release} to start exhaling`;
         default:
@@ -882,7 +882,7 @@ function App() {
         return `✅ Perfect! Keep breathing in while holding`;
       case 'hold':
       case 'holdAfter':
-        return `✅ Great! ${t.breathing.keepHolding} and keep pressing`;
+        return `✅ Great! ${t.breathing.hold} - time flows naturally`;
       case 'exhale':
         return `✅ Excellent! Breathe out slowly`;
       default:
