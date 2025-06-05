@@ -1326,6 +1326,15 @@ function App() {
       totalSessions: prev.totalSessions + 1
     }));
     
+    // Record breathing session for Zen Coins
+    const pattern = BREATHING_PATTERNS[selectedIntention];
+    recordBreathingSession({
+      intention: selectedIntention,
+      pattern_name: pattern.name,
+      cycles_completed: pattern.cycles,
+      duration_seconds: pattern.cycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.holdAfter)
+    });
+    
     setCurrentScreen('completion');
   };
 
