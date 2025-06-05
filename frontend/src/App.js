@@ -124,7 +124,7 @@ const COMPLETION_MESSAGES = {
   }
 };
 
-// Oasis Canvas Component - Dynamic media based on intention
+// Oasis Canvas Component - Smooth slow video playback
 const OasisCanvas = ({ oasisState, breathProgress, onElementGrown, selectedIntention }) => {
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
@@ -136,46 +136,33 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown, selectedInten
   // Calculate total session duration
   const totalSessionTime = pattern.cycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.holdAfter);
   
-  // Calculate progressive playback rate (starts at 1.0, gradually slows down)
-  const getPlaybackRate = (progress) => {
-    // Start at normal speed (1.0), slow down to 0.3x as progress increases
-    return Math.max(0.3, 1.0 - (progress / 100) * 0.7);
-  };
-  
-  // Calculate current video time based on progress (no looping)
-  const getCurrentVideoTime = (progress) => {
-    const maxTime = media.duration - 0.1; // Leave small buffer to prevent end
-    return Math.min((progress / 100) * maxTime, maxTime);
+  // Ultra slow and smooth playback rate (consistent slow speed)
+  const getSlowPlaybackRate = () => {
+    // Always very slow - between 0.1x to 0.3x for smooth, meditative pace
+    return 0.15; // Fixed slow rate for consistent smooth playback
   };
 
   useEffect(() => {
     if (videoRef.current && breathProgress >= 0) {
       const video = videoRef.current;
-      const targetPlaybackRate = getPlaybackRate(breathProgress);
-      const targetCurrentTime = getCurrentVideoTime(breathProgress);
+      const slowRate = getSlowPlaybackRate();
       
-      // Set playback rate for gradual slowdown
-      if (video.playbackRate !== targetPlaybackRate) {
-        video.playbackRate = targetPlaybackRate;
-      }
+      // Set consistent slow playback rate
+      video.playbackRate = slowRate;
       
-      // Sync current time without looping
-      if (Math.abs(video.currentTime - targetCurrentTime) > 0.5) {
-        video.currentTime = targetCurrentTime;
-      }
-      
-      // Start playing if not already
+      // Start playing smoothly if not already
       if (video.paused && breathProgress > 0) {
         video.play().catch(console.log);
       }
       
-      console.log(`Progress: ${breathProgress}%, Playback Rate: ${targetPlaybackRate.toFixed(2)}x, Time: ${targetCurrentTime.toFixed(1)}s`);
+      // Let video play naturally at slow speed, no time jumping
+      console.log(`Smooth slow playback at ${slowRate}x speed`);
     }
-  }, [breathProgress, media.duration]);
+  }, [breathProgress]); // Minimal dependencies to prevent stuttering
 
   return (
     <div ref={canvasRef} className="oasis-canvas absolute inset-0 overflow-hidden">
-      {/* All intentions now use video */}
+      {/* Smooth slow video playback */}
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
@@ -184,7 +171,8 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown, selectedInten
         }}
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
+        loop={false}
       >
         <source src={media.url} type="video/mp4" />
       </video>
