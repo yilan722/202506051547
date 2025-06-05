@@ -101,3 +101,129 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Please test the new Zen Coin system backend that I've implemented. Test the following endpoints and functionalities: User Profile Management, Zen Coin System, Breathing Sessions, Achievements, Courses, Mood Diary, and Leaderboard."
+
+backend:
+  - task: "User Profile Management"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested creating a new user profile and retrieving user profile by ID. Both endpoints are working correctly."
+
+  - task: "Zen Coin System"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested retrieving user's Zen Coin balance and transaction history. Both endpoints are working correctly."
+
+  - task: "Breathing Sessions"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "Initial test failed with a 500 Internal Server Error. Found issue with MongoDB not being able to encode datetime.date objects."
+      - working: true
+        agent: "testing"
+        comment: "Fixed the issue by modifying the calculate_consecutive_days function and the breathing session endpoint to use datetime objects instead of date objects. Now working correctly and awarding 10 Zen Coins as expected."
+
+  - task: "Achievements"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested retrieving all available achievements and user's unlocked achievements. Both endpoints are working correctly. Verified that achievements are being unlocked appropriately when completing actions."
+
+  - task: "Courses"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested retrieving all available courses, courses available to user, and completing a course. All endpoints are working correctly. Verified that Zen Coins are awarded when completing a course."
+
+  - task: "Mood Diary"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested creating a mood diary entry. The endpoint is working correctly and awarding 5 Zen Coins as expected."
+
+  - task: "Leaderboard"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested retrieving the Zen Coin leaderboard. The endpoint is working correctly and showing users ranked by their Zen Coin balance."
+
+frontend:
+  - task: "Frontend Integration"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Frontend testing was not part of the current test scope. Only backend API endpoints were tested."
+
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "User Profile Management"
+    - "Zen Coin System"
+    - "Breathing Sessions"
+    - "Achievements"
+    - "Courses"
+    - "Mood Diary"
+    - "Leaderboard"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "testing"
+    message: "I've completed testing all the backend API endpoints for the Zen Coin system. All endpoints are now working correctly after fixing an issue with the Breathing Sessions endpoint. The issue was related to MongoDB not being able to encode datetime.date objects. I fixed this by modifying the code to use datetime objects instead of date objects. All other endpoints were working correctly from the start. The Zen Coin system is awarding coins as expected for breathing sessions (10 coins), mood diary entries (5 coins), and course completions (varies by course). Achievements are also being unlocked appropriately."
