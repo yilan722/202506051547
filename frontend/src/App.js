@@ -66,12 +66,38 @@ const ELEMENT_TYPES = {
   mushroom: { weight: 7, growTime: 2, colors: ['#dc2626', '#b91c1c', '#991b1b', '#f97316'] }
 };
 
-// Audio resources for immersive experience
-const AUDIO_SOURCES = {
-  desert: 'https://www.soundjay.com/misc/sounds/wind-desert.mp3', // Placeholder
-  garden: 'https://www.soundjay.com/nature/sounds/forest-birds.mp3', // Placeholder
-  inhale: 'https://www.soundjay.com/misc/sounds/bell-ringing.mp3', // Placeholder
-  exhale: 'https://www.soundjay.com/misc/sounds/wind-chimes.mp3' // Placeholder
+// Media sources for different intentions
+const INTENTION_MEDIA = {
+  'calm-before-event': {
+    type: 'gif',
+    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif',
+    duration: 5, // Original GIF duration in seconds
+    audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/black-box-cozy-forest-122347.mp3'
+  },
+  'sharpen-focus': {
+    type: 'video',
+    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/_Restorative_Lands__(Healing_a_Barren_Landscape)__Concept__Users_start_with_a_small_patch_of_barren__seed3658657357.mp4',
+    duration: 10, // Estimate video duration
+    audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/just-relax-11157.mp3'
+  },
+  'soothe-mind': {
+    type: 'gif',
+    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif',
+    duration: 5,
+    audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/time-to-relax-11152.mp3'
+  },
+  'drift-to-sleep': {
+    type: 'gif',
+    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif',
+    duration: 5,
+    audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/meditation-relax-sleep-music-346733.mp3'
+  },
+  'just-breathe': {
+    type: 'gif',
+    url: 'https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif',
+    duration: 5,
+    audio: 'https://raw.githubusercontent.com/yilan722/yilan722/main/buddha-healing-flute-music-calming-relaxing-music-for-body-souls-161796.mp3'
+  }
 };
 
 // Completion messages based on intention
