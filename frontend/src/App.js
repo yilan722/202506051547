@@ -336,6 +336,20 @@ function App() {
   const [showDonationModal, setShowDonationModal] = useState(false);
   const [donationAmount, setDonationAmount] = useState(15);
   const [isProcessingDonation, setIsProcessingDonation] = useState(false);
+  
+  // Zen Coin System State
+  const [userProfile, setUserProfile] = useState(null);
+  const [achievements, setAchievements] = useState([]);
+  const [userAchievements, setUserAchievements] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [showZenCoinMenu, setShowZenCoinMenu] = useState(false);
+  const [showMoodDiary, setShowMoodDiary] = useState(false);
+  const [showCourses, setShowCourses] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [achievementNotification, setAchievementNotification] = useState(null);
+  
   const intervalRef = useRef(null);
   const audioRef = useRef(null);
   const breathButtonRef = useRef(false); // Add ref for real-time button state
