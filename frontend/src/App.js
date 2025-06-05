@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
+import {
+  ZenCoinDisplay,
+  AchievementNotification,
+  MoodDiary,
+  CoursesModal,
+  AchievementGallery,
+  Leaderboard,
+  ZenCoinMenu
+} from './ZenCoinSystem';
 
 const BREATHING_PATTERNS = {
   'calm-before-event': {
