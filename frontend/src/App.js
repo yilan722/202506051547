@@ -274,8 +274,47 @@ function App() {
     }
   };
 
-  // Create calm and peaceful ambient sound
-  const createAmbientSound = () => {
+  // Create intention-specific audio for background
+  const createIntentionAudio = (intention) => {
+    const media = INTENTION_MEDIA[intention];
+    if (!media || !media.audio) return null;
+    
+    try {
+      const audio = new Audio(media.audio);
+      audio.loop = true;
+      audio.volume = 0.3; // Set comfortable volume
+      return audio;
+    } catch (error) {
+      console.log('Failed to create intention audio:', error);
+      return null;
+    }
+  };
+
+  // Start intention-specific background audio
+  const startAmbientSound = () => {
+    console.log('Starting ambient sound for intention:', selectedIntention);
+    if (backgroundAudio) {
+      backgroundAudio.pause();
+      backgroundAudio.currentTime = 0;
+    }
+    
+    const intentionAudio = createIntentionAudio(selectedIntention);
+    if (intentionAudio) {
+      intentionAudio.play().catch(console.log);
+      setBackgroundAudio(intentionAudio);
+      console.log('Intention audio started successfully');
+    } else {
+      console.log('Failed to create intention audio, using fallback');
+      // Fallback to synthesized audio if file audio fails
+      if (audioContext && audioContext.state === 'running') {
+        const ambient = createSynthesizedAmbientSound();
+        setBackgroundAudio(ambient);
+      }
+    }
+  };
+
+  // Fallback synthesized ambient sound (original Om-based music)
+  const createSynthesizedAmbientSound = () => {
     if (!audioContext) return null;
     
     try {
