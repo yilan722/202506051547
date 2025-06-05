@@ -291,35 +291,32 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown }) => {
 
   return (
     <div ref={canvasRef} className="oasis-canvas absolute inset-0 overflow-hidden">
-      {/* Use the provided barren landscape image */}
+      {/* Dynamic GIF background that syncs with breathing progress */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(https://images.pexels.com/photos/60013/desert-drought-dehydrated-clay-soil-60013.jpeg)',
-          filter: 'brightness(0.85) contrast(1.1)'
+          backgroundImage: 'url(https://i.imgur.com/your-gif-url.gif)', // Replace with your actual GIF URL
+          filter: `brightness(${0.7 + (breathProgress / 100) * 0.4}) contrast(${0.9 + (breathProgress / 100) * 0.3})`,
+          animationDuration: `${Math.max(30, 120 - (breathProgress * 0.9))}s`, // Slow down as progress increases
+          animationIterationCount: 'infinite',
+          animationTimingFunction: 'linear'
         }}
       ></div>
       
-      {/* Subtle overlay to enhance element visibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+      {/* Subtle overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
       
-      {/* Permanent oasis elements */}
-      {oasisState.elements.map(element => renderElement(element))}
-      
-      {/* Currently animating elements */}
-      {animatingElements.map(element => renderElement(element, true))}
-      
-      {/* Breathing particles - positioned to emanate from the central crater */}
+      {/* Breathing particles synchronized with session */}
       <div className="breathing-particles absolute inset-0 pointer-events-none">
-        {Array.from({ length: 8 }, (_, i) => (
+        {Array.from({ length: Math.floor(breathProgress / 12.5) }, (_, i) => (
           <div
             key={i}
             className="particle absolute w-1 h-1 bg-yellow-300 rounded-full opacity-70 animate-float"
             style={{
-              left: `${48 + Math.cos(i * 0.785) * 10}%`, // Emanate from center crater
-              top: `${65 + Math.sin(i * 0.785) * 6}%`,
-              animationDelay: `${Math.random() * 8}s`,
-              animationDuration: `${6 + Math.random() * 4}s`
+              left: `${48 + Math.cos(i * 0.785) * 15}%`,
+              top: `${65 + Math.sin(i * 0.785) * 10}%`,
+              animationDelay: `${i * 0.5}s`,
+              animationDuration: `${4 + Math.random() * 2}s`
             }}
           />
         ))}
