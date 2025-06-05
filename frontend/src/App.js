@@ -1292,6 +1292,7 @@ Would you like me to open GitHub in a new tab?`;
           oasisState={oasisState}
           breathProgress={100}
           onElementGrown={() => {}}
+          selectedIntention={selectedIntention}
         />
         
         <div className="max-w-2xl w-full text-center z-10">
