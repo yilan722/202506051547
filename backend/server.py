@@ -643,15 +643,18 @@ async def create_breathing_session(session_data: BreathingSessionCreate):
     await db.breathing_sessions.insert_one(session.dict())
     
     # Update user stats
-    today = date.today()
+    today = datetime.utcnow().date()
     consecutive_days = await calculate_consecutive_days(session.user_id)
+    
+    # Convert date to datetime for MongoDB compatibility
+    today_datetime = datetime.combine(today, datetime.min.time())
     
     await db.user_profiles.update_one(
         {"id": session.user_id},
         {
             "$inc": {"total_sessions": 1},
             "$set": {
-                "last_practice_date": today,
+                "last_practice_date": today_datetime,
                 "consecutive_days": consecutive_days,
                 "updated_at": datetime.utcnow()
             }
