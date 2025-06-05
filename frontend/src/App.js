@@ -120,7 +120,10 @@ const TRANSLATIONS = {
     supportDescription: "帮助我们保持心灵绿洲无广告并持续改进，为世界上更多灵魂带来平静与安宁。",
     supportWork: "支持我们的工作",
     sessions: "会话",
-    elements: "生命元素",
+    elements: "禅币",
+    zenCoins: "禅币",
+    totalZenCoins: "总禅币",
+    earnedCoins: "获得",
     intentions: {
       'calm-before-event': { title: '重要时刻前的平静', subtitle: '演讲、面试或重要时刻' },
       'sharpen-focus': { title: '提高专注力', subtitle: '工作、学习或创作任务' },
