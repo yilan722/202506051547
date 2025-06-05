@@ -747,9 +747,11 @@ function App() {
       let shouldProgress = false;
       switch (currentPhase) {
         case 'inhale':
+          shouldProgress = currentButtonState; // Must be pressing
+          break;
         case 'hold':
         case 'holdAfter':
-          shouldProgress = currentButtonState; // Must be pressing
+          shouldProgress = true; // Auto-progress during hold phases - no button needed
           break;
         case 'exhale':
           shouldProgress = !currentButtonState; // Must be releasing
