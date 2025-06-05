@@ -831,12 +831,12 @@ function App() {
     const { currentPhase } = breathingSession;
     switch (currentPhase) {
       case 'inhale':
-        return 'Press & Hold';
+        return t.breathing.pressHold;
       case 'hold':
       case 'holdAfter':
-        return 'Keep Holding';
+        return t.breathing.keepHolding; // Now shows "保持憋气" in Chinese
       case 'exhale':
-        return 'Release';
+        return t.breathing.release;
       default:
         return 'Breathe';
     }
