@@ -464,8 +464,16 @@ function App() {
   // Stop background ambient sound
   const stopAmbientSound = () => {
     if (backgroundAudio) {
-      backgroundAudio.stop();
+      if (backgroundAudio.pause) {
+        // HTML5 Audio element
+        backgroundAudio.pause();
+        backgroundAudio.currentTime = 0;
+      } else if (backgroundAudio.stop) {
+        // Web Audio API synthesized sound
+        backgroundAudio.stop();
+      }
       setBackgroundAudio(null);
+      console.log('Background audio stopped');
     }
   };
 
