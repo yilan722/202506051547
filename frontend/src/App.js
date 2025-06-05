@@ -1257,48 +1257,64 @@ function App() {
   const renderScreen = () => {
     if (currentScreen === 'welcome') {
       return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center p-6 relative overflow-hidden">
-          {/* Language Selector */}
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Enhanced ambient effects */}
+          <div className="absolute inset-0">
+            {/* Dynamic gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-800/30 via-indigo-800/20 to-slate-900/40 animate-pulse"></div>
+            
+            {/* Floating orbs */}
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+            
+            {/* Enhanced particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {Array.from({ length: 30 }, (_, i) => (
+                <div
+                  key={i}
+                  className={`absolute rounded-full opacity-20 ${i % 3 === 0 ? 'bg-purple-400' : i % 3 === 1 ? 'bg-indigo-400' : 'bg-cyan-400'}`}
+                  style={{
+                    width: `${Math.random() * 4 + 1}px`,
+                    height: `${Math.random() * 4 + 1}px`,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 10}s`,
+                    animationDuration: `${4 + Math.random() * 6}s`,
+                    animation: `twinkle ${4 + Math.random() * 6}s ease-in-out infinite`
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Language Selector with enhanced styling */}
           <div className="absolute top-6 right-6 z-20">
             <select 
               value={currentLanguage}
               onChange={(e) => setCurrentLanguage(e.target.value)}
-              className="bg-black/20 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-white/40 transition-all duration-300"
+              className="bg-black/30 backdrop-blur-xl border border-white/30 rounded-2xl px-6 py-3 text-white text-sm focus:outline-none focus:border-purple-400/60 transition-all duration-500 shadow-xl hover:bg-black/40"
             >
-              <option value="en" className="bg-slate-800">English</option>
-              <option value="zh" className="bg-slate-800">中文</option>
-              <option value="ja" className="bg-slate-800">日本語</option>
-              <option value="ko" className="bg-slate-800">한국어</option>
+              <option value="en" className="bg-slate-800">🇺🇸 English</option>
+              <option value="zh" className="bg-slate-800">🇨🇳 中文</option>
+              <option value="ja" className="bg-slate-800">🇯🇵 日本語</option>
+              <option value="ko" className="bg-slate-800">🇰🇷 한국어</option>
             </select>
           </div>
 
-          {/* Zen Coin Display */}
+          {/* Enhanced Zen Coin Display */}
           {userProfile && (
             <div className="absolute top-6 left-6 z-20">
               <button
                 onClick={() => setShowZenCoinMenu(true)}
-                className="bg-black/20 backdrop-blur-sm border border-yellow-400/30 rounded-xl px-4 py-2 hover:bg-black/30 transition-all duration-300"
+                className="group bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-yellow-600/20 backdrop-blur-xl border border-yellow-400/40 rounded-2xl px-6 py-3 hover:from-yellow-500/30 hover:via-orange-500/30 hover:to-yellow-600/30 transition-all duration-500 shadow-xl relative overflow-hidden"
               >
-                <ZenCoinDisplay zenCoins={userProfile.zen_coins} className="text-sm" />
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-orange-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative z-10">
+                  <ZenCoinDisplay zenCoins={userProfile.zen_coins} className="text-sm font-semibold" />
+                </div>
               </button>
             </div>
           )}
-
-          {/* Ambient background particles */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {Array.from({ length: 20 }, (_, i) => (
-              <div
-                key={i}
-                className="absolute w-1 h-1 bg-white rounded-full opacity-20 animate-twinkle"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 10}s`,
-                  animationDuration: `${4 + Math.random() * 6}s`
-                }}
-              />
-            ))}
-          </div>
 
           <div className="max-w-5xl w-full text-center relative z-10">
             {/* Header with elegant styling */}
