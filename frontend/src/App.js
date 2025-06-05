@@ -836,7 +836,7 @@ function App() {
         return t.breathing.pressHold;
       case 'hold':
       case 'holdAfter':
-        return t.breathing.keepHolding; // Now shows "保持憋气" in Chinese
+        return t.breathing.hold; // Just show "Hold Breath" - no button action needed
       case 'exhale':
         return t.breathing.release;
       default:
