@@ -916,17 +916,22 @@ function App() {
               
               {/* Button row */}
               <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg">
-                {/* Donation Button */}
+                {/* Real Payment Button */}
                 <button 
                   onClick={() => {
-                    const amount = window.prompt("Thank you for supporting our mission! 🌱\n\nChoose your donation amount:\n• $5 - Support Our Mission\n• $15 - Nurture Growth\n• $30 - Flourish Together\n\nEnter amount ($5, $15, or $30):", "15");
-                    if (amount && (amount === "5" || amount === "15" || amount === "30")) {
-                      const packageNames = {"5": "Support Our Mission", "15": "Nurture Growth", "30": "Flourish Together"};
-                      if (window.confirm(`Confirm your ${packageNames[amount]} donation of $${amount}?\n\n(This is a demo - no actual payment will be processed)`)) {
-                        alert(`🌱💖 Thank you for your generous ${packageNames[amount]} donation of $${amount}!\n\nYour support helps keep Restorative Lands ad-free and continuously improving, bringing peace and calm to more souls around the world.\n\nMay your kindness bloom like the gardens you've helped create! 🌸`);
+                    // Open payment instruction dialog
+                    const confirmed = window.confirm("💖 Support Restorative Lands Development\n\n🌱 Real Payment Options:\n\n1. PayPal: yilan722@example.com\n2. Venmo: @yilan722\n3. CashApp: $yilan722\n4. Crypto: BTC/ETH/USDT supported\n\nOr choose 'OK' to see integration guide for developers.\n\nCancel to return to meditation.");
+                    
+                    if (confirmed) {
+                      // Show developer payment integration guide
+                      const devGuide = `🚀 DEVELOPER PAYMENT INTEGRATION GUIDE\n\n💳 Option 1: Stripe Integration\n• Sign up at stripe.com\n• Get API keys (publishable + secret)\n• Install: npm install @stripe/stripe-js\n• Add to .env: REACT_APP_STRIPE_PUBLISHABLE_KEY\n• Backend: Add Stripe webhook endpoint\n\n💰 Option 2: PayPal Integration\n• Sign up at developer.paypal.com\n• Get Client ID and Secret\n• Install: npm install @paypal/react-paypal-js\n• Create PayPal Button component\n\n🏦 Option 3: Square Integration\n• Sign up at developer.squareup.com\n• Get Application ID\n• Install: npm install squareup\n• Implement Square Payment Form\n\n⚡ Quick Demo Implementation:\n1. Replace onClick handler\n2. Add payment provider SDK\n3. Configure webhook endpoints\n4. Handle success/failure states\n\n🔧 Need help? Contact: yilan722@email.com\n\nFor now, use manual payment methods above! 💝`;
+                      
+                      alert(devGuide);
+                      
+                      // Optional: Open PayPal direct link
+                      if (window.confirm("Open PayPal payment link?")) {
+                        window.open("https://www.paypal.me/yilan722/15", "_blank");
                       }
-                    } else if (amount !== null) {
-                      alert("Please enter one of the available amounts: $5, $15, or $30");
                     }
                   }}
                   className="group flex-1 relative px-6 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20"
