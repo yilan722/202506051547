@@ -1314,15 +1314,27 @@ function App() {
                 </p>
               </div>
               
-              {/* Progress indicator with elegant styling */}
-              {oasisState.totalSessions > 0 && (
-                <div className="mt-8 p-6 bg-gradient-to-r from-emerald-900/30 via-teal-900/30 to-cyan-900/30 rounded-3xl backdrop-blur-xl border border-emerald-700/20 inline-block shadow-2xl">
-                  <div className="flex items-center justify-center space-x-4">
-                    <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
-                    <p className="text-emerald-200 font-light text-lg">
-                      🌱 Your sanctuary flourishes with <span className="font-medium text-emerald-100">{oasisState.elements.length}</span> {t.elements} from <span className="font-medium text-emerald-100">{oasisState.totalSessions}</span> sacred {t.sessions}
-                    </p>
-                    <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+              {/* Progress indicator with elegant styling - Show Zen Coins instead of elements */}
+              {(userProfile?.zen_coins > 0 || oasisState.totalSessions > 0) && (
+                <div className="mt-8 p-8 bg-gradient-to-r from-emerald-900/20 via-teal-900/20 to-cyan-900/20 rounded-3xl backdrop-blur-2xl border border-emerald-500/30 inline-block shadow-2xl relative overflow-hidden">
+                  {/* Animated background gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 via-teal-400/10 to-cyan-400/10 animate-pulse"></div>
+                  <div className="relative z-10 flex items-center justify-center space-x-6">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-4 h-4 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full animate-pulse shadow-lg"></div>
+                      <span className="text-2xl">🪙</span>
+                      <div className="text-emerald-200 font-light text-lg">
+                        <span className="font-semibold text-emerald-100">{userProfile?.zen_coins || 0}</span> {t.zenCoins || t.elements} {t.earnedCoins || "earned"}
+                      </div>
+                    </div>
+                    <div className="w-px h-8 bg-gradient-to-b from-transparent via-emerald-400/50 to-transparent"></div>
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">🧘</span>
+                      <div className="text-emerald-200 font-light text-lg">
+                        <span className="font-semibold text-emerald-100">{oasisState.totalSessions}</span> sacred {t.sessions}
+                      </div>
+                      <div className="w-4 h-4 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full animate-pulse shadow-lg"></div>
+                    </div>
                   </div>
                 </div>
               )}
