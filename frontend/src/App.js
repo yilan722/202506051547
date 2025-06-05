@@ -728,6 +728,43 @@ function App() {
     }
   }, [userProfile]);
 
+  // Initialize or get user profile
+  const initializeUserProfile = async () => {
+    const savedUserId = localStorage.getItem('zenUserId');
+    if (savedUserId) {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${savedUserId}`);
+        if (response.ok) {
+          const profile = await response.json();
+          setUserProfile(profile);
+          return profile;
+        }
+      } catch (error) {
+        console.error('Failed to load user profile:', error);
+      }
+    }
+    
+    // Create new user profile
+    const username = `ZenUser${Date.now()}`;
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      });
+      
+      if (response.ok) {
+        const profile = await response.json();
+        setUserProfile(profile);
+        localStorage.setItem('zenUserId', profile.id);
+        return profile;
+      }
+    } catch (error) {
+      console.error('Failed to create user profile:', error);
+    }
+    return null;
+  };
+
   // Donation packages
   const donationPackages = [
     { amount: 5, name: 'Support Our Mission', description: 'Help keep the app ad-free', icon: '🌱' },
