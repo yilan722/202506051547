@@ -943,13 +943,13 @@ function App() {
 
   const getPhaseInstruction = () => {
     const { currentPhase, timeRemaining } = breathingSession;
-    const instructions = {
-      inhale: 'Breathe In',
-      hold: 'Hold',
-      exhale: 'Breathe Out',
-      holdAfter: 'Hold'
+    const phaseNames = {
+      inhale: t.breathing.inhale,
+      hold: t.breathing.hold,
+      exhale: t.breathing.exhale,
+      holdAfter: t.breathing.hold
     };
-    return `${instructions[currentPhase]} • ${Math.ceil(timeRemaining)}s`;
+    return `${phaseNames[currentPhase]} • ${Math.ceil(timeRemaining)}s`;
   };
 
   useEffect(() => {
