@@ -6,9 +6,10 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 import uuid
-from datetime import datetime
+from datetime import datetime, date
+from enum import Enum
 
 
 ROOT_DIR = Path(__file__).parent
@@ -26,6 +27,32 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 
+# Zen Coin System Enums
+class AchievementType(str, Enum):
+    DAILY_PRACTICE = "daily_practice"
+    COURSE_COMPLETION = "course_completion"
+    FRIEND_REFERRAL = "friend_referral"
+    CONSECUTIVE_DAYS = "consecutive_days"
+    MOOD_DIARY = "mood_diary"
+    PAID_SUBSCRIPTION = "paid_subscription"
+
+class CourseLevel(str, Enum):
+    BEGINNER = "beginner"
+    INTERMEDIATE = "intermediate"
+    ADVANCED = "advanced"
+    MASTER = "master"
+
+class MoodType(str, Enum):
+    VERY_HAPPY = "very_happy"
+    HAPPY = "happy"
+    NEUTRAL = "neutral"
+    SAD = "sad"
+    ANXIOUS = "anxious"
+    STRESSED = "stressed"
+    CALM = "calm"
+    PEACEFUL = "peaceful"
+
+
 # Define Models
 class StatusCheck(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -34,6 +61,112 @@ class StatusCheck(BaseModel):
 
 class StatusCheckCreate(BaseModel):
     client_name: str
+
+# User Profile and Zen Coin Models
+class UserProfile(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    username: str
+    email: Optional[str] = None
+    zen_coins: int = 0
+    total_sessions: int = 0
+    consecutive_days: int = 0
+    last_practice_date: Optional[date] = None
+    achievements: List[str] = Field(default_factory=list)
+    referral_code: str = Field(default_factory=lambda: str(uuid.uuid4())[:8])
+    referred_by: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserProfileCreate(BaseModel):
+    username: str
+    email: Optional[str] = None
+    referred_by: Optional[str] = None
+
+class ZenCoinTransaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    amount: int
+    transaction_type: AchievementType
+    description: str
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+class Achievement(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    description: str
+    achievement_type: AchievementType
+    zen_coin_reward: int
+    requirements: Dict[str, Any]
+    is_repeatable: bool = False
+    icon: str = "🏆"
+
+class Course(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    description: str
+    level: CourseLevel
+    zen_coin_reward: int
+    duration_minutes: int
+    breathing_pattern: str  # References BREATHING_PATTERNS from frontend
+    prerequisites: List[str] = Field(default_factory=list)
+    is_active: bool = True
+
+class CourseCompletion(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    course_id: str
+    completed_at: datetime = Field(default_factory=datetime.utcnow)
+    zen_coins_earned: int
+
+class MoodDiaryEntry(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    mood: MoodType
+    notes: Optional[str] = None
+    breathing_session_id: Optional[str] = None
+    zen_coins_earned: int = 5
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class BreathingSession(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    intention: str
+    pattern_name: str
+    cycles_completed: int
+    duration_seconds: int
+    zen_coins_earned: int
+    completed_at: datetime = Field(default_factory=datetime.utcnow)
+
+# Request/Response Models
+class ZenCoinTransactionCreate(BaseModel):
+    user_id: str
+    amount: int
+    transaction_type: AchievementType
+    description: str
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+class MoodDiaryCreate(BaseModel):
+    user_id: str
+    mood: MoodType
+    notes: Optional[str] = None
+    breathing_session_id: Optional[str] = None
+
+class BreathingSessionCreate(BaseModel):
+    user_id: str
+    intention: str
+    pattern_name: str
+    cycles_completed: int
+    duration_seconds: int
+
+class CourseCreate(BaseModel):
+    name: str
+    description: str
+    level: CourseLevel
+    zen_coin_reward: int
+    duration_minutes: int
+    breathing_pattern: str
+    prerequisites: List[str] = Field(default_factory=list)
 
 # Payment models
 class DonationRequest(BaseModel):
