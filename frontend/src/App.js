@@ -859,16 +859,32 @@ function App() {
   // Get action guidance text
   const getActionGuidance = () => {
     const { currentPhase } = breathingSession;
+    const shouldProgress = getShouldProgressTime(currentPhase);
+    
+    if (!shouldProgress) {
+      switch (currentPhase) {
+        case 'inhale':
+          return `⏸️ ${t.breathing.pressHold} to start inhaling and advance time`;
+        case 'hold':
+        case 'holdAfter':
+          return `⏸️ ${t.breathing.keepHolding} to continue`;
+        case 'exhale':
+          return `⏸️ ${t.breathing.release} to start exhaling`;
+        default:
+          return '';
+      }
+    }
+    
     switch (currentPhase) {
       case 'inhale':
-        return 'Press and hold the button to breathe in deeply';
+        return `✅ Perfect! Keep breathing in while holding`;
       case 'hold':
       case 'holdAfter':
-        return 'Keep holding the button to maintain your breath';
+        return `✅ Great! ${t.breathing.keepHolding} and keep pressing`;
       case 'exhale':
-        return 'Release the button to let your breath flow out';
+        return `✅ Excellent! Breathe out slowly`;
       default:
-        return 'Follow the breathing rhythm';
+        return '';
     }
   };
 
