@@ -1898,6 +1898,225 @@ function App() {
     );
   }
 
+  // Main screen rendering logic
+  if (currentScreen === 'welcome') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center p-6 relative overflow-hidden">
+        {/* Language Selector */}
+        <div className="absolute top-6 right-6 z-20">
+          <select 
+            value={currentLanguage}
+            onChange={(e) => setCurrentLanguage(e.target.value)}
+            className="bg-black/20 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-white/40 transition-all duration-300"
+          >
+            <option value="en" className="bg-slate-800">English</option>
+            <option value="zh" className="bg-slate-800">中文</option>
+            <option value="ja" className="bg-slate-800">日本語</option>
+            <option value="ko" className="bg-slate-800">한국어</option>
+          </select>
+        </div>
+
+        {/* Zen Coin Display */}
+        {userProfile && (
+          <div className="absolute top-6 left-6 z-20">
+            <button
+              onClick={() => setShowZenCoinMenu(true)}
+              className="bg-black/20 backdrop-blur-sm border border-yellow-400/30 rounded-xl px-4 py-2 hover:bg-black/30 transition-all duration-300"
+            >
+              <ZenCoinDisplay zenCoins={userProfile.zen_coins} className="text-sm" />
+            </button>
+          </div>
+        )}
+
+        {/* Ambient background particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {Array.from({ length: 20 }, (_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-white rounded-full opacity-20 animate-twinkle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 10}s`,
+                animationDuration: `${4 + Math.random() * 6}s`
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="max-w-5xl w-full text-center relative z-10">
+          {/* Header with elegant styling */}
+          <div className="mb-16">
+            <div className="mb-8">
+              <h1 className="text-7xl font-extralight text-white mb-6 tracking-widest leading-tight">
+                {t.title}
+              </h1>
+              <div className="w-32 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto mb-6"></div>
+              <p className="text-2xl text-purple-200 mb-4 font-light tracking-wide">{t.subtitle}</p>
+              <p className="text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed font-light">
+                {t.description}
+              </p>
+            </div>
+            
+            {/* Progress indicator with elegant styling */}
+            {oasisState.totalSessions > 0 && (
+              <div className="mt-8 p-6 bg-gradient-to-r from-emerald-900/30 via-teal-900/30 to-cyan-900/30 rounded-3xl backdrop-blur-xl border border-emerald-700/20 inline-block shadow-2xl">
+                <div className="flex items-center justify-center space-x-4">
+                  <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                  <p className="text-emerald-200 font-light text-lg">
+                    🌱 Your sanctuary flourishes with <span className="font-medium text-emerald-100">{oasisState.elements.length}</span> {t.elements} from <span className="font-medium text-emerald-100">{oasisState.totalSessions}</span> sacred {t.sessions}
+                  </p>
+                  <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Intention selection with refined cards */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-light text-white mb-12 tracking-wide">{t.howHelp}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {intentions.map((intention) => (
+                <button
+                  key={intention.id}
+                  onClick={() => {
+                    setSelectedIntention(intention.id);
+                    setCurrentScreen('preparation');
+                  }}
+                  className={`group relative p-8 rounded-3xl bg-gradient-to-br ${intention.gradient} hover:scale-105 transform transition-all duration-500 text-white shadow-2xl hover:shadow-3xl overflow-hidden`}
+                >
+                  {/* Card glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="text-5xl mb-6 filter drop-shadow-lg">{intention.icon}</div>
+                    <h3 className="text-xl font-medium mb-3 tracking-wide">{t.intentions[intention.id].title}</h3>
+                    <p className="text-sm opacity-90 font-light leading-relaxed">{t.intentions[intention.id].subtitle}</p>
+                  </div>
+                  
+                  {/* Subtle border accent */}
+                  <div className="absolute inset-0 rounded-3xl border border-white/20 group-hover:border-white/40 transition-colors duration-500"></div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Support section with elegant button */}
+          <div className="mt-16 pt-8 border-t border-slate-700/30">
+            <div className="flex flex-col items-center space-y-8">
+              <h3 className="text-xl font-light text-slate-300 tracking-wide">{t.supportMission}</h3>
+              <p className="text-sm text-slate-400 max-w-2xl text-center leading-relaxed font-light">
+                {t.supportDescription}
+              </p>
+              
+              {/* Support section with donation button only */}
+              <div className="flex justify-center w-full max-w-md mx-auto">
+                {/* Real Payment Button */}
+                <button 
+                  onClick={() => {
+                    // Open payment instruction dialog
+                    const confirmed = window.confirm("💖 Support Restorative Lands Development\n\n🌱 Real Payment Options:\n\n1. PayPal: yilan722@example.com\n2. Venmo: @yilan722\n3. CashApp: $yilan722\n4. Crypto: BTC/ETH/USDT supported\n\nOr choose 'OK' to see integration guide for developers.\n\nCancel to return to meditation.");
+                    
+                    if (confirmed) {
+                      // Show developer payment integration guide
+                      const devGuide = `🚀 DEVELOPER PAYMENT INTEGRATION GUIDE\n\n💳 Option 1: Stripe Integration\n• Sign up at stripe.com\n• Get API keys (publishable + secret)\n• Install: npm install @stripe/stripe-js\n• Add to .env: REACT_APP_STRIPE_PUBLISHABLE_KEY\n• Backend: Add Stripe webhook endpoint\n\n💰 Option 2: PayPal Integration\n• Sign up at developer.paypal.com\n• Get Client ID and Secret\n• Install: npm install @paypal/react-paypal-js\n• Create PayPal Button component\n\n🏦 Option 3: Square Integration\n• Sign up at developer.squareup.com\n• Get Application ID\n• Install: npm install squareup\n• Implement Square Payment Form\n\n⚡ Quick Demo Implementation:\n1. Replace onClick handler\n2. Add payment provider SDK\n3. Configure webhook endpoints\n4. Handle success/failure states\n\n🔧 Need help? Contact: yilan722@email.com\n\nFor now, use manual payment methods above! 💝`;
+                      
+                      alert(devGuide);
+                      
+                      // Optional: Open PayPal direct link
+                      if (window.confirm("Open PayPal payment link?")) {
+                        window.open("https://www.paypal.me/yilan722/15", "_blank");
+                      }
+                    }
+                  }}
+                  className="w-full px-8 py-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-purple-500/20 border border-rose-400/30 rounded-2xl text-rose-200 hover:text-white transition-all duration-500 backdrop-blur-sm hover:shadow-lg hover:shadow-rose-500/20"
+                >
+                  <div className="flex items-center justify-center space-x-3">
+                    <span className="text-lg">💖</span>
+                    <span className="font-light tracking-wide">{t.supportWork}</span>
+                    <div className="w-2 h-2 bg-rose-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                  </div>
+                  
+                  {/* Button hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </button>
+              </div>
+              
+              <p className="text-xs text-slate-500 font-light italic text-center">
+                Your support helps cover development and server costs • Share your garden to inspire others on their mindfulness journey
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Zen Coin System Modals */}
+        {achievementNotification && (
+          <AchievementNotification
+            achievement={achievementNotification}
+            onClose={() => setAchievementNotification(null)}
+          />
+        )}
+
+        {showZenCoinMenu && (
+          <ZenCoinMenu
+            userProfile={userProfile}
+            onMoodDiary={() => {
+              setShowZenCoinMenu(false);
+              setShowMoodDiary(true);
+            }}
+            onCourses={() => {
+              setShowZenCoinMenu(false);
+              setShowCourses(true);
+            }}
+            onAchievements={() => {
+              setShowZenCoinMenu(false);
+              setShowAchievements(true);
+            }}
+            onLeaderboard={() => {
+              setShowZenCoinMenu(false);
+              setShowLeaderboard(true);
+            }}
+            onClose={() => setShowZenCoinMenu(false)}
+          />
+        )}
+
+        {showMoodDiary && (
+          <MoodDiary
+            userProfile={userProfile}
+            onMoodSubmit={submitMoodDiary}
+            onClose={() => setShowMoodDiary(false)}
+          />
+        )}
+
+        {showCourses && (
+          <CoursesModal
+            userProfile={userProfile}
+            courses={courses}
+            onCourseComplete={completeCourse}
+            onClose={() => setShowCourses(false)}
+          />
+        )}
+
+        {showAchievements && (
+          <AchievementGallery
+            userProfile={userProfile}
+            allAchievements={achievements}
+            userAchievements={userAchievements}
+            onClose={() => setShowAchievements(false)}
+          />
+        )}
+
+        {showLeaderboard && (
+          <Leaderboard
+            leaderboard={leaderboard}
+            userProfile={userProfile}
+            onClose={() => setShowLeaderboard(false)}
+          />
+        )}
+      </div>
+    );
+  }
+
   return null;
 }
 
