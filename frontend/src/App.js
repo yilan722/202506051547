@@ -1139,6 +1139,7 @@ Would you like me to open GitHub in a new tab?`;
           oasisState={oasisState}
           breathProgress={breathingSession.progress}
           onElementGrown={handleElementGrown}
+          selectedIntention={selectedIntention}
         />
         
         {/* Progress Bar */}
