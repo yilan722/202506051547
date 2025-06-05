@@ -442,18 +442,26 @@ function App() {
     }
   };
 
-  // Start background ambient sound
+  // Start intention-specific background audio
   const startAmbientSound = () => {
-    console.log('startAmbientSound called, audioContext:', audioContext);
+    console.log('Starting ambient sound for intention:', selectedIntention);
     if (backgroundAudio) {
-      backgroundAudio.stop();
+      backgroundAudio.pause();
+      backgroundAudio.currentTime = 0;
     }
-    if (audioContext && audioContext.state === 'running') {
-      const ambient = createAmbientSound();
-      setBackgroundAudio(ambient);
-      console.log('Ambient sound created and set:', ambient);
+    
+    const intentionAudio = createIntentionAudio(selectedIntention);
+    if (intentionAudio) {
+      intentionAudio.play().catch(console.log);
+      setBackgroundAudio(intentionAudio);
+      console.log('Intention audio started successfully');
     } else {
-      console.log('Audio context not ready for ambient sound');
+      console.log('Failed to create intention audio, using fallback');
+      // Fallback to synthesized audio if file audio fails
+      if (audioContext && audioContext.state === 'running') {
+        const ambient = createSynthesizedAmbientSound();
+        setBackgroundAudio(ambient);
+      }
     }
   };
 
