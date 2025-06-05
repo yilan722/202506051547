@@ -108,7 +108,7 @@ const OasisCanvas = ({ oasisState, breathProgress, onElementGrown }) => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(https://i.imgur.com/YOUR_GIF_ID.gif)', // Replace YOUR_GIF_ID with actual ID
+          backgroundImage: 'url(https://raw.githubusercontent.com/yilan722/yilan722/main/grow_elements_in_a_dessert_that_makes_it_a_garden_finally%2C_multiple_elements_seed2226346197.gif)',
           filter: `brightness(${0.7 + (breathProgress / 100) * 0.4}) contrast(${0.9 + (breathProgress / 100) * 0.3})`,
           animationDuration: `${Math.max(30, 120 - (breathProgress * 0.9))}s`, // Slow down as progress increases
           animationIterationCount: 'infinite',
