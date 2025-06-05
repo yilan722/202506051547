@@ -614,7 +614,6 @@ function App() {
     }
   };
 
-  // Handle donation processing
   };
 
   // ========== ZEN COIN SYSTEM FUNCTIONS ==========
