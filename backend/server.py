@@ -351,8 +351,12 @@ async def calculate_consecutive_days(user_id: str) -> int:
         return 0
     
     # Get today's date
-    today = date.today()
+    today = datetime.utcnow().date()
     last_practice = user["last_practice_date"]
+    
+    # Convert MongoDB datetime to date if needed
+    if isinstance(last_practice, datetime):
+        last_practice = last_practice.date()
     
     # If last practice was today, return current consecutive days
     if last_practice == today:
